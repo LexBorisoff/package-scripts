@@ -26,6 +26,7 @@
     "bin"
   ],
   "bin": {
+    "create-pm-run": "bin/create-app.js",
     "pm-run": "bin/index.js",
     "pmrun": "bin/index.js"
   },
@@ -66,6 +67,8 @@
   "dependencies": {
     "@lexjs/prompts": "^1.1.0",
     "chalk": "^4.1.2",
+    "execa": "^9.5.2",
+    "fs-hooks": "^1.0.0",
     "type-fest": "^4.32.0",
     "yargs": "^17.7.2"
   }
