@@ -1,3 +1,4 @@
+bin
 *.ignore.*
 .npmrc
 __test__*
