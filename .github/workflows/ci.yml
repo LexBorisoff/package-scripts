@@ -18,8 +18,6 @@ jobs:
   ci:
     name: CI
     uses: LexBorisoff/workflows/.github/workflows/ci.yml@main
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   ci-results-pr:
     name: CI Results (Pull Request)
