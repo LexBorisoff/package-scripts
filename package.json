@@ -1,7 +1,7 @@
 {
   "name": "pm-run-script",
   "version": "0.0.0-semantically-released",
-  "description": "CLI to interactively select and run package scripts",
+  "description": "CLI to interactively select and run package scripts using any package manager",
   "type": "module",
   "publishConfig": {
     "access": "public",
@@ -26,15 +26,17 @@
     "bin"
   ],
   "bin": {
-    "create-pm-run": "bin/create-app.js",
-    "pm-run": "bin/index.js",
-    "pmrun": "bin/index.js"
+    "create-pm-run": "bin/create-app.js"
   },
   "keywords": [
     "package",
     "script",
     "run",
-    "interactive"
+    "interactive",
+    "package-manager",
+    "npm",
+    "pnpm",
+    "yarn"
   ],
   "author": "Lex Borisoff <lex@boriosoff.dev>",
   "license": "ISC",
@@ -45,6 +47,9 @@
   "homepage": "https://github.com/LexBorisoff/pm-run-script/tree/main#readme",
   "bugs": {
     "url": "https://github.com/LexBorisoff/pm-run-script/issues"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
@@ -60,9 +65,6 @@
     "semantic-release": "^24.2.1",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0"
-  },
-  "engines": {
-    "node": ">=18"
   },
   "dependencies": {
     "@lexjs/prompts": "^1.1.0",
