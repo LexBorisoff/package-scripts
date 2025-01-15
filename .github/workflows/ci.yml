@@ -1,8 +1,12 @@
-name: CI (Pull Request)
+name: CI
 
 on:
   pull_request:
     branches:
+      - main
+      - dev
+  push:
+    branches-ignore:
       - main
       - dev
 
@@ -16,9 +20,16 @@ jobs:
     uses: LexBorisoff/workflows/.github/workflows/ci.yml@main
 
   ci-results:
-    name: CI Results (Pull Request)
-    if: always()
+    if: github.event_name == 'push'
     needs: ci
     uses: LexBorisoff/workflows/.github/workflows/ci-results.yml@main
     with:
       ci-result: ${{ needs.ci.result }}
+
+  ci-results-pr:
+    if: github.event_name == 'pull_request'
+    needs: ci
+    uses: LexBorisoff/workflows/.github/workflows/ci-results.yml@main
+    with:
+      ci-result: ${{ needs.ci.result }}
+      name: Pull Request
