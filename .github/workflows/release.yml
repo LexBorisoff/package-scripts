@@ -17,7 +17,7 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   sync-dev:
-    name: Sync Main to Dev Branch # Job name for the Sync Dev workflow
+    name: Sync main to dev
     uses: LexBorisoff/workflows/.github/workflows/sync-dev.yml@main
     secrets:
       DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
