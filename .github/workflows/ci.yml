@@ -20,6 +20,7 @@ jobs:
     uses: LexBorisoff/workflows/.github/workflows/ci.yml@main
 
   ci-results:
+    name: CI Results
     if: github.event_name == 'push'
     needs: ci
     uses: LexBorisoff/workflows/.github/workflows/ci-results.yml@main
@@ -27,9 +28,9 @@ jobs:
       ci-result: ${{ needs.ci.result }}
 
   ci-results-pr:
+    name: CI Results - Pull Request
     if: github.event_name == 'pull_request'
     needs: ci
     uses: LexBorisoff/workflows/.github/workflows/ci-results.yml@main
     with:
       ci-result: ${{ needs.ci.result }}
-      name: CI Results (Pull Request)
