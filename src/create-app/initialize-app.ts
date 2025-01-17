@@ -1,33 +1,31 @@
 import { createTree, FsHooks } from 'fs-hooks';
 import { coreHooks } from 'fs-hooks/core';
 
-import { isWindows, packageName, rootPath } from '../constants.js';
+import { defaultPm, isWindows, packageName, rootPath } from '../constants.js';
 import { npmHooks } from '../hooks/npm-hooks.js';
 
-import { bash, powershell, sourceBash } from './script-contents.js';
+import { bash, powershell } from './script-contents.js';
 
-export async function initializeApp(cmdName: string): Promise<void> {
+export async function initializeApp(command: string): Promise<void> {
   const fsHooks = new FsHooks(rootPath, {
     lib: {},
     tmp: {
       script: '',
-      manager: 'npm run',
     },
-    bash: {
-      [`${cmdName}.sh`]: bash(cmdName),
-    },
-    'source.sh': sourceBash,
   });
 
   createTree(fsHooks);
 
+  const useCore = fsHooks.useHooks(coreHooks);
+
+  const bashScript = bash({ command, ...defaultPm });
+  useCore((root) => root).fileCreate(`${command}.sh`, bashScript);
+
   if (isWindows) {
-    // create .ps1 scripts for windows
-    const useCore = fsHooks.useHooks(coreHooks);
     const binDir = useCore((root) => root).dirCreate('bin');
 
     if (binDir) {
-      binDir.fileCreate(`${cmdName}.ps1`, powershell);
+      binDir.fileCreate(`${command}.ps1`, powershell(defaultPm));
     }
   }
 

@@ -4,14 +4,14 @@ import { createLinks } from './create-links.js';
 import { initializeApp } from './initialize-app.js';
 
 async function createApp(): Promise<void> {
-  const { cmdName } = await $_.text({
-    name: 'cmdName',
+  const { command } = await $_.text({
+    name: 'command',
     message: 'What should be the command name?',
     initial: 'scripts',
   });
 
-  if (cmdName != null) {
-    await initializeApp(cmdName);
+  if (command != null) {
+    await initializeApp(command);
     createLinks();
   }
 }
