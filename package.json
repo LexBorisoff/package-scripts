@@ -1,5 +1,5 @@
 {
-  "name": "pm-run-script",
+  "name": "package-scripts",
   "version": "0.0.0-semantically-released",
   "description": "CLI to interactively select and run package scripts using any package manager",
   "type": "module",
@@ -10,7 +10,7 @@
   "scripts": {
     "prepack": "npm run build",
     "build": "npm run compile",
-    "prebuild": "npm run ci && rimraf ./bin",
+    "prebuild": "npm run ci && rimraf ./dist",
     "ci": "npm run check-style && npm run check-build",
     "check-style": "npm run format:check && npm run lint",
     "check-build": "npm run compile -- --noEmit",
@@ -23,10 +23,10 @@
     "prepare": "husky"
   },
   "files": [
-    "bin"
+    "dist"
   ],
   "bin": {
-    "create-pm-run": "bin/create-app.js"
+    "create-package-scripts": "dist/create-app/create-app.js"
   },
   "keywords": [
     "package",
@@ -42,11 +42,11 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LexBorisoff/pm-run-script.git"
+    "url": "git+https://github.com/LexBorisoff/package-scripts.git"
   },
-  "homepage": "https://github.com/LexBorisoff/pm-run-script/tree/main#readme",
+  "homepage": "https://github.com/LexBorisoff/package-scripts/tree/main#readme",
   "bugs": {
-    "url": "https://github.com/LexBorisoff/pm-run-script/issues"
+    "url": "https://github.com/LexBorisoff/package-scripts/issues"
   },
   "engines": {
     "node": ">=18"
@@ -70,7 +70,7 @@
     "@lexjs/prompts": "^1.1.0",
     "chalk": "^4.1.2",
     "execa": "^9.5.2",
-    "fs-hooks": "^1.0.0",
+    "fs-hooks": "^1.0.1",
     "type-fest": "^4.32.0",
     "yargs": "^17.7.2"
   }
