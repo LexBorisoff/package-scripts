@@ -19,7 +19,7 @@ jobs:
     name: CI
     uses: LexBorisoff/workflows/.github/workflows/ci.yml@main
 
-  ci-results:
+  results:
     name: CI Results
     if: github.event_name == 'pull_request'
     needs: ci
