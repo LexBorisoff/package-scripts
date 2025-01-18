@@ -1,79 +1,65 @@
-import type { PmInterface } from '../types/pm.types.js';
+import { PATHS } from '../constants.js';
 
-const withRun = (run?: string): boolean => run != null && run !== '';
-const pmRun = ({ pm, run }: PmInterface): string =>
-  `${pm}${withRun(run) ? ` ${run}` : ''}`;
+import type { PackageManagerInterface } from '../types/package-manager.types.js';
 
-/* ~~~ BASH ~~~ */
-interface BashOptions extends PmInterface {
-  command: string;
-}
+const pmCommand = ({ command, run }: PackageManagerInterface): string =>
+  `${command}${run !== '' ? ` ${run}` : ''}`;
 
-export const bash = ({
-  command,
-  pm,
-  run,
-}: BashOptions): string => `#!/usr/bin/env bash
+export const bashFunction = (
+  functionName: string,
+  packageManager: PackageManagerInterface,
+): string => `#!/usr/bin/env bash
 
-${command}() {
-  local current_dir="$(cd "$(dirname "\${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-  local module="$current_dir/.dist/main.js"
-  local script_file="$current_dir/tmp/script"
-
-  if test -f "$module"; then
-    node "$module" "$@"
-    local script=$(<"$script_file")
+${functionName}() {
+  if test -f "${PATHS.MAIN_FILE}"; then
+    node "${PATHS.MAIN_FILE}" "$@"
+    local script=$(<"${PATHS.SCRIPT_FILE}")
     
     # clear script file
-    >"$script_file"
+    >"${PATHS.SCRIPT_FILE}"
 
     # run the script
     if test -n "$script"; then
-      ${pmRun({ pm, run })} "$script"
+      ${pmCommand(packageManager)} "$script"
     fi
   fi
 }
 `;
 
-// TODO: placed in bin and added to PATH
-const bashScript = `#!/usr/bin/env bash
+export const bashScript = (
+  packageManager: PackageManagerInterface,
+): string => `#!/usr/bin/env bash
 
-current_dir="$(cd "$(dirname "\${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+if test -f "${PATHS.MAIN_FILE}"; then
+  node "${PATHS.MAIN_FILE}" "$@"
 
-if test -f "$current_dir/.dist/main.js"; then
-  node "$current_dir/.dist/main.js" "$@"
-  script=$(<"$current_dir/.tmp/script")
-
+  script=$(<"${PATHS.SCRIPT_FILE}")
+  
   # clear script file
-  >"$current_dir/.tmp/script"
+  >"${PATHS.SCRIPT_FILE}"
 
   # run the script
   if test -n "$script"; then
-    npm run "$script"
+    ${pmCommand(packageManager)} "$script"
     unset $script
   fi
 fi
-
-unset $current_dir
 `;
 
-/* ~~~ POWERSHELL ~~~ */
-export const powershell = (pm: PmInterface): string => `#!/usr/bin/env pwsh
-
-$CurrentDir = Split-Path -Parent $PSCommandPath
-$Module = Join-Path -Path $CurrentDir -ChildPath ".dist/main.js"
-$ScriptFile = Join-Path -Path $CurrentDir -ChildPath ".tmp/script"
+export const powershellScript = (
+  packageManager: PackageManagerInterface,
+): string => `#!/usr/bin/env pwsh
 
 # Check if the module exists
-if (Test-Path -Path $Module) {
-  node $Module $args
-  $Script = Get-Content -Path $ScriptFile -ErrorAction SilentlyContinue
+if (Test-Path -Path "${PATHS.MAIN_FILE}") {
+  node "${PATHS.MAIN_FILE}" $args
+  $Script = Get-Content -Path "${PATHS.SCRIPT_FILE}" -ErrorAction SilentlyContinue
 
   # clear script file
-  Clear-Content -Path $ScriptFile
+  Clear-Content -Path "${PATHS.SCRIPT_FILE}"
 
   if (![string]::IsNullOrEmpty($Script)) {
-    Invoke-Expression "${pmRun(pm)} $Script"
+    Invoke-Expression "${pmCommand(packageManager)} $Script"
   }
 }
 `;

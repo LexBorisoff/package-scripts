@@ -3,7 +3,7 @@
 import { FsHooks } from 'fs-hooks';
 import { coreHooks } from 'fs-hooks/core';
 
-import { rootPath } from './constants.js';
+import { PATHS } from './constants.js';
 import { selectScript } from './select-script.js';
 import { logger } from './utils/logger.js';
 
@@ -12,7 +12,7 @@ import { logger } from './utils/logger.js';
     const script = await selectScript();
 
     if (script != null) {
-      const fsHooks = new FsHooks(rootPath, {
+      const fsHooks = new FsHooks(PATHS.ROOT, {
         tmp: {
           script: '',
         },

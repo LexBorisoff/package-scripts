@@ -1,7 +1,10 @@
-import $_ from '@lexjs/prompts';
+#!/usr/bin/env node
 
-import { createLinks } from './create-links.js';
+import $_ from '@lexjs/prompts';
+import 'dotenv/config';
+
 import { initializeApp } from './initialize-app.js';
+import { linkDist } from './link-dist.js';
 
 async function createApp(): Promise<void> {
   const { command } = await $_.text({
@@ -12,7 +15,7 @@ async function createApp(): Promise<void> {
 
   if (command != null) {
     await initializeApp(command);
-    createLinks();
+    linkDist();
   }
 }
 

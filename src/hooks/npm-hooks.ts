@@ -3,8 +3,13 @@ import { FsHooks } from 'fs-hooks';
 
 import { logger } from '../utils/logger.js';
 
+export const npmCommands = {
+  install: 'install',
+  link: 'link',
+} as const;
+
 export const npmHooks = FsHooks.dirHooks((targetDir) => ({
-  async install(deps: string[]) {
+  async [npmCommands.install](deps: string[]) {
     const currentDir = process.cwd();
     process.chdir(targetDir.path);
 
@@ -18,7 +23,7 @@ export const npmHooks = FsHooks.dirHooks((targetDir) => ({
       process.chdir(currentDir);
     }
   },
-  async link(deps: string[]) {
+  async [npmCommands.link](deps: string[]) {
     const currentDir = process.cwd();
     process.chdir(targetDir.path);
 

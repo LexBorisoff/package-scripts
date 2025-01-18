@@ -1,14 +1,18 @@
 import { createTree, FsHooks } from 'fs-hooks';
 import { coreHooks } from 'fs-hooks/core';
 
-import { defaultPm, isWindows, packageName, rootPath } from '../constants.js';
-import { npmHooks } from '../hooks/npm-hooks.js';
+import { IS_DEV, IS_WINDOWS, PACKAGE_NAME, PATHS } from '../constants.js';
+import { npmCommands, npmHooks } from '../hooks/npm-hooks.js';
+import { packageManagers } from '../package-managers.js';
 
-import { bash, powershell } from './script-contents.js';
+import { bashScript, powershellScript } from './script-contents.js';
+
+const { npm } = packageManagers;
 
 export async function initializeApp(command: string): Promise<void> {
-  const fsHooks = new FsHooks(rootPath, {
+  const fsHooks = new FsHooks(PATHS.ROOT, {
     lib: {},
+    bin: {},
     tmp: {
       script: '',
     },
@@ -17,18 +21,18 @@ export async function initializeApp(command: string): Promise<void> {
   createTree(fsHooks);
 
   const useCore = fsHooks.useHooks(coreHooks);
+  const binDir = useCore((root) => root.bin);
 
-  const bashScript = bash({ command, ...defaultPm });
-  useCore((root) => root).fileCreate(`${command}.sh`, bashScript);
-
-  if (isWindows) {
-    const binDir = useCore((root) => root).dirCreate('bin');
-
-    if (binDir) {
-      binDir.fileCreate(`${command}.ps1`, powershell(defaultPm));
-    }
+  binDir.fileCreate(command, bashScript(npm));
+  if (IS_WINDOWS) {
+    binDir.fileCreate(`${command}.ps1`, powershellScript(npm));
   }
 
   const useNpm = fsHooks.useHooks({ dir: npmHooks });
-  await useNpm(({ lib }) => lib).link([packageName]);
+
+  const npmCommand: keyof typeof npmCommands = IS_DEV
+    ? npmCommands.link
+    : npmCommands.install;
+
+  await useNpm(({ lib }) => lib)[npmCommand]([PACKAGE_NAME]);
 }

@@ -1,13 +1,44 @@
 import os from 'node:os';
 import path from 'node:path';
 
-import type { PmInterface } from './types/pm.types.js';
+const NODE_ENV = process.env.NODE_ENV;
 
-export const rootPath = path.resolve(os.homedir(), '.package-scripts');
-export const isWindows = os.platform() === 'win32';
-export const packageName = 'package-scripts';
+export const IS_DEV = NODE_ENV === 'development' || NODE_ENV === 'dev';
+export const PACKAGE_NAME = 'package-scripts';
+export const IS_WINDOWS = os.platform() === 'win32';
 
-export const defaultPm: PmInterface = {
-  pm: 'npm',
-  run: 'run',
-};
+class Paths {
+  get ROOT(): string {
+    return path.resolve(os.homedir(), `.${PACKAGE_NAME}`);
+  }
+
+  get BIN_DIR(): string {
+    return path.resolve(this.ROOT, 'bin');
+  }
+
+  get LIB_DIR(): string {
+    return path.resolve(this.ROOT, 'lib');
+  }
+
+  get TMP_DIR(): string {
+    return path.resolve(this.ROOT, 'tmp');
+  }
+
+  get DIST_LINK_NAME(): string {
+    return '.dist';
+  }
+
+  get DIST_LINK(): string {
+    return path.resolve(this.BIN_DIR, this.DIST_LINK_NAME);
+  }
+
+  get MAIN_FILE(): string {
+    return path.resolve(this.DIST_LINK, 'main.js');
+  }
+
+  get SCRIPT_FILE(): string {
+    return path.resolve(this.TMP_DIR, 'script');
+  }
+}
+
+export const PATHS = new Paths();
