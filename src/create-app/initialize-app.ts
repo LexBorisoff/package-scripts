@@ -27,6 +27,6 @@ export async function initializeApp(command: string): Promise<void> {
 
   // install package
   const npmCommand = IS_DEV ? npmCommands.link : npmCommands.install;
-  const useNpm = fsHooks.useHooks({ dir: npmHooks });
+  const useNpm = fsHooks.useHooks(npmHooks);
   await useNpm(({ lib }) => lib)[npmCommand]([PACKAGE_NAME]);
 }

@@ -32,7 +32,6 @@ export const bashScript = (
 
 if test -f "${PATHS.MAIN_FILE}"; then
   node "${PATHS.MAIN_FILE}" "$@"
-
   script=$(<"${PATHS.SCRIPT_FILE}")
   
   # clear script file
@@ -50,7 +49,6 @@ export const powershellScript = (
   packageManager: PackageManagerInterface,
 ): string => `#!/usr/bin/env pwsh
 
-# Check if the module exists
 if (Test-Path -Path "${PATHS.MAIN_FILE}") {
   node "${PATHS.MAIN_FILE}" $args
   $Script = Get-Content -Path "${PATHS.SCRIPT_FILE}" -ErrorAction SilentlyContinue

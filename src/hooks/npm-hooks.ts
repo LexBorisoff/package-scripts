@@ -8,7 +8,7 @@ export const npmCommands = {
   link: 'link',
 } as const;
 
-export const npmHooks = FsHooks.dirHooks((targetDir) => ({
+const dirHooks = FsHooks.dirHooks((targetDir) => ({
   async [npmCommands.install](deps: string[]) {
     const currentDir = process.cwd();
     process.chdir(targetDir.path);
@@ -16,7 +16,7 @@ export const npmHooks = FsHooks.dirHooks((targetDir) => ({
     try {
       await $`npm i ${deps.join(' ')}`;
     } catch (error) {
-      if (error instanceof ExecaError) {
+      if (error instanceof Error || error instanceof ExecaError) {
         logger.error(error.message);
       }
 
@@ -30,7 +30,7 @@ export const npmHooks = FsHooks.dirHooks((targetDir) => ({
     try {
       await Promise.all(deps.map((dependency) => $`npm link ${dependency}`));
     } catch (error) {
-      if (error instanceof ExecaError) {
+      if (error instanceof Error || error instanceof ExecaError) {
         logger.error(error.message);
       }
 
@@ -38,3 +38,7 @@ export const npmHooks = FsHooks.dirHooks((targetDir) => ({
     }
   },
 }));
+
+export const npmHooks = {
+  dir: dirHooks,
+} as const;

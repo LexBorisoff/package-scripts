@@ -14,12 +14,10 @@ import { logger } from './utils/logger.js';
 
     if (script != null) {
       const fsHooks = new FsHooks(PATHS.ROOT, tree);
-
       const useCore = fsHooks.useHooks(coreHooks);
       useCore(({ tmp }) => tmp.script).write(script);
     }
   } catch (error) {
-    // TODO: custom errors
     if (error instanceof Error) {
       logger.error(error.message);
     }
