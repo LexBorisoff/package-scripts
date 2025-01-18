@@ -12,6 +12,7 @@ export const bashFunction = (
 
 ${functionName}() {
   if test -f "${PATHS.MAIN_FILE}"; then
+    # get the script name
     node "${PATHS.MAIN_FILE}" "$@"
     local script=$(<"${PATHS.SCRIPT_FILE}")
     
@@ -31,6 +32,7 @@ export const bashScript = (
 ): string => `#!/usr/bin/env bash
 
 if test -f "${PATHS.MAIN_FILE}"; then
+  # get the script name
   node "${PATHS.MAIN_FILE}" "$@"
   script=$(<"${PATHS.SCRIPT_FILE}")
   
@@ -50,12 +52,14 @@ export const powershellScript = (
 ): string => `#!/usr/bin/env pwsh
 
 if (Test-Path -Path "${PATHS.MAIN_FILE}") {
+  # get the script name  
   node "${PATHS.MAIN_FILE}" $args
   $Script = Get-Content -Path "${PATHS.SCRIPT_FILE}" -ErrorAction SilentlyContinue
 
   # clear script file
   Clear-Content -Path "${PATHS.SCRIPT_FILE}"
 
+  # run the script
   if (![string]::IsNullOrEmpty($Script)) {
     Invoke-Expression "${pmCommand(packageManager)} $Script"
   }

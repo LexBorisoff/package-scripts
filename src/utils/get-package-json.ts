@@ -14,7 +14,6 @@ export function getPackageJson(): PackageJson {
     }
 
     const json = fs.readFileSync(packageJsonPath, 'utf-8');
-
     return parseData<PackageJson>(json) ?? {};
   } catch {
     return {};
