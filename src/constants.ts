@@ -1,10 +1,12 @@
 import os from 'node:os';
 import path from 'node:path';
 
+import { getPackageJson } from './utils/get-package-json.js';
+
 const NODE_ENV = process.env.NODE_ENV;
 
 export const IS_DEV = NODE_ENV === 'development' || NODE_ENV === 'dev';
-export const PACKAGE_NAME = 'package-scripts';
+export const PACKAGE_NAME = getPackageJson().name ?? 'package-scripts';
 export const IS_WINDOWS = os.platform() === 'win32';
 
 class Paths {
