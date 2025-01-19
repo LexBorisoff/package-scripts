@@ -1,6 +1,6 @@
 import { PATHS } from '../constants.js';
 
-import type { PackageManagerInterface } from '../types/package-manager.types.js';
+import type { PackageManagerInterface } from '../package-manager/package-manager.types.js';
 
 const pmCommand = ({ command, run }: PackageManagerInterface): string =>
   `${command}${run !== '' ? ` ${run}` : ''}`;

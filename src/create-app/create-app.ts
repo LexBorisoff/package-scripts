@@ -3,6 +3,11 @@
 import $_ from '@lexjs/prompts';
 import 'dotenv/config';
 
+import {
+  selectPackageManager,
+  SelectPmReason,
+} from '../package-manager/select-package-manager.js';
+
 import { initializeApp } from './initialize-app.js';
 import { linkDist } from './link-dist.js';
 
@@ -14,7 +19,13 @@ import { linkDist } from './link-dist.js';
   });
 
   if (command != null) {
-    await initializeApp(command);
-    linkDist();
+    const packageManager = await selectPackageManager(
+      SelectPmReason.InitializeApp,
+    );
+
+    if (packageManager != null) {
+      await initializeApp(command, packageManager);
+      linkDist();
+    }
   }
 })();

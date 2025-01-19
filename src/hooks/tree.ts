@@ -8,6 +8,7 @@ export const initialTree = {
   tmp: {
     script: '',
   },
+  'config.json': '',
 } satisfies TreeInterface;
 
 export const tree = {
