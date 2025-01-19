@@ -1,18 +1,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import url from 'node:url';
-
-import { parseData } from './parse-data.js';
 
 import type { PackageJson } from 'type-fest';
 
 export function getPackageJson(): PackageJson {
-  const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-  const root = path.join(__dirname, '../../');
+  const packageJson = path.resolve(process.cwd(), 'package.json');
+
+  if (!fs.existsSync(packageJson)) {
+    throw new Error('package.json does not exist in current directory');
+  }
 
   try {
-    const json = fs.readFileSync(path.resolve(`${root}/package.json`), 'utf-8');
-    return parseData<PackageJson>(json) ?? {};
+    const json = fs.readFileSync(packageJson, 'utf-8');
+    return JSON.parse(json);
   } catch {
     return {};
   }
