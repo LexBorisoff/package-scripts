@@ -10,6 +10,10 @@ import type { PackageJson } from 'type-fest';
 const { _ } = args;
 const match = _.map((arg) => arg.toString());
 
+function getMatchFn(script: string) {
+  return (value: string) => script.toLowerCase().includes(value.toLowerCase());
+}
+
 export async function selectScript(): Promise<string | undefined> {
   const filePath = path.resolve(process.cwd(), 'package.json');
 
@@ -55,10 +59,7 @@ export async function selectScript(): Promise<string | undefined> {
           ([script]) => key === `pre${script}` || key === `post${script}`,
         ),
     )
-    .filter(
-      ([key]) =>
-        match.length === 0 || match.every((value) => key.includes(value)),
-    )
+    .filter(([key]) => match.length === 0 || match.every(getMatchFn(key)))
     .map(([key, value]) => ({
       title: key,
       value: key,
@@ -80,10 +81,9 @@ export async function selectScript(): Promise<string | undefined> {
     name: 'script',
     message: 'Type to find a script',
     suggest(input: string | number, list) {
+      const inputArray = `${input}`.split(/\s+/);
       return Promise.resolve(
-        list.filter(({ title }) =>
-          title.toLowerCase().includes(input.toString().toLowerCase()),
-        ),
+        list.filter(({ title }) => inputArray.every(getMatchFn(title))),
       );
     },
     choices,
