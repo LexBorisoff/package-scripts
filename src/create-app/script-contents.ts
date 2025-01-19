@@ -1,17 +1,13 @@
 import { PATHS } from '../constants.js';
 
-import type { PackageManagerInterface } from '../package-manager/package-manager.types.js';
-
-const pmCommand = ({ command, run }: PackageManagerInterface): string =>
-  `${command}${run !== '' ? ` ${run}` : ''}`;
-
 export const bashFunction = (
   functionName: string,
-  packageManager: PackageManagerInterface,
 ): string => `#!/usr/bin/env bash
 
 ${functionName}() {
   if test -f "${PATHS.MAIN_FILE}"; then
+    local package_manager=$(<"${PATHS.PACKAGE_MANAGER_FILE}")
+
     # get the script name
     node "${PATHS.MAIN_FILE}" "$@"
     local script=$(<"${PATHS.SCRIPT_FILE}")
@@ -21,37 +17,38 @@ ${functionName}() {
 
     # run the script
     if test -n "$script"; then
-      ${pmCommand(packageManager)} "$script"
+      $package_manager "$script"
     fi
   fi
 }
 `;
 
-export const bashScript = (
-  packageManager: PackageManagerInterface,
-): string => `#!/usr/bin/env bash
+export const bashScript = `#!/usr/bin/env bash
 
 if test -f "${PATHS.MAIN_FILE}"; then
+  package_manager=$(<"${PATHS.PACKAGE_MANAGER_FILE}")
+
   # get the script name
   node "${PATHS.MAIN_FILE}" "$@"
   script=$(<"${PATHS.SCRIPT_FILE}")
-  
+
   # clear script file
   >"${PATHS.SCRIPT_FILE}"
 
   # run the script
   if test -n "$script"; then
-    ${pmCommand(packageManager)} "$script"
+    $package_manager "$script"
+    unset $package_manager
     unset $script
   fi
 fi
 `;
 
-export const powershellScript = (
-  packageManager: PackageManagerInterface,
-): string => `#!/usr/bin/env pwsh
+export const powershellScript = `#!/usr/bin/env pwsh
 
 if (Test-Path -Path "${PATHS.MAIN_FILE}") {
+  $PackageManager = Get-Content -Path "${PATHS.PACKAGE_MANAGER_FILE}" -ErrorAction SilentlyContinue
+
   # get the script name  
   node "${PATHS.MAIN_FILE}" $args
   $Script = Get-Content -Path "${PATHS.SCRIPT_FILE}" -ErrorAction SilentlyContinue
@@ -61,7 +58,7 @@ if (Test-Path -Path "${PATHS.MAIN_FILE}") {
 
   # run the script
   if (![string]::IsNullOrEmpty($Script)) {
-    Invoke-Expression "${pmCommand(packageManager)} $Script"
+    Invoke-Expression "$PackageManager $Script"
   }
 }
 `;

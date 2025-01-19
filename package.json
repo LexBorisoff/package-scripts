@@ -26,7 +26,7 @@
     "dist"
   ],
   "bin": {
-    "create-package-scripts": "dist/create-app/create-app.js"
+    "create-package-scripts": "dist/create-app/index.js"
   },
   "keywords": [
     "package",

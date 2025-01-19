@@ -6,8 +6,9 @@ import { getPackageJson } from './utils/get-package-json.js';
 const NODE_ENV = process.env.NODE_ENV;
 
 export const IS_DEV = NODE_ENV === 'development' || NODE_ENV === 'dev';
-export const PACKAGE_NAME = getPackageJson().name ?? 'package-scripts';
 export const IS_WINDOWS = os.platform() === 'win32';
+export const PACKAGE_NAME = getPackageJson().name ?? 'package-scripts';
+export const INITIAL_COMMAND = 'scripts';
 
 class Paths {
   get ROOT(): string {
@@ -40,6 +41,10 @@ class Paths {
 
   get SCRIPT_FILE(): string {
     return path.resolve(this.TMP_DIR, 'script');
+  }
+
+  get PACKAGE_MANAGER_FILE(): string {
+    return path.resolve(this.TMP_DIR, 'package-manager');
   }
 }
 
