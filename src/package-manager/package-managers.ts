@@ -1,6 +1,14 @@
-import type { PackageManagerInterface } from './package-manager.types.js';
+import type { PackageManagerInterface } from '../types/package-manager.types.js';
 
-export const packageManagers: Record<string, PackageManagerInterface> = {
+interface PackageManagers {
+  [pm: string]: PackageManagerInterface;
+  npm: PackageManagerInterface;
+  pnpm: PackageManagerInterface;
+  yarn: PackageManagerInterface;
+  bun: PackageManagerInterface;
+}
+
+export const packageManagers: PackageManagers = {
   npm: {
     command: 'npm',
     run: 'run',

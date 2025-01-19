@@ -15,16 +15,13 @@ function getMatchFn(script: string) {
 }
 
 export async function selectScript(): Promise<string | undefined> {
-  const filePath = path.resolve(process.cwd(), 'package.json');
+  const packageJson = path.resolve(process.cwd(), 'package.json');
 
-  if (!fs.existsSync(filePath)) {
+  if (!fs.existsSync(packageJson)) {
     throw new Error('package.json does not exist in current directory');
   }
 
-  const json = fs.readFileSync(filePath, {
-    encoding: 'utf-8',
-  });
-
+  const json = fs.readFileSync(packageJson, 'utf-8');
   const contents: PackageJson = JSON.parse(json);
 
   if (contents.scripts == null || Object.keys(contents.scripts).length === 0) {

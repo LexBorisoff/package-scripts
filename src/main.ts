@@ -1,21 +1,24 @@
 #!/usr/bin/env node
 
-import { FsHooks } from 'fs-hooks';
-import { coreHooks } from 'fs-hooks/core';
-
-import { PATHS } from './constants.js';
-import { tree } from './hooks/tree.js';
+import { useCoreHooks } from './hooks/use-core-hooks.js';
+import { handlePackageManager } from './package-manager/handle-package-manager.js';
 import { selectScript } from './select-script.js';
+import { args } from './utils/args.js';
 import { logger } from './utils/logger.js';
 
+const { use } = args;
+
 (async function main() {
+  if (use != null) {
+    await handlePackageManager(use);
+    return;
+  }
+
   try {
     const script = await selectScript();
 
     if (script != null) {
-      const fsHooks = new FsHooks(PATHS.ROOT, tree);
-      const useCore = fsHooks.useHooks(coreHooks);
-      useCore(({ tmp }) => tmp.script).write(script);
+      useCoreHooks(({ tmp }) => tmp.script).write(script);
     }
   } catch (error) {
     if (error instanceof Error) {
