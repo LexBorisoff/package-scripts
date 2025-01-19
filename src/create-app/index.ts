@@ -28,21 +28,12 @@ import { linkDist } from './link-dist.js';
     );
 
     if (packageManager != null) {
-      const { usePackageManager } = await $_.toggle({
-        name: 'usePackageManager',
-        message:
-          'Use "packageManager" property from package.json when available?',
-        initial: true,
-      });
+      await initializeApp();
+      linkDist();
+      createScriptFiles(command);
 
-      if (usePackageManager != null) {
-        await initializeApp();
-        linkDist();
-        createScriptFiles(command);
-
-        updateConfig({ command, packageManager, usePackageManager });
-        updatePackageManager(packageManager);
-      }
+      updateConfig({ command, packageManager });
+      updatePackageManager(packageManager);
     }
   }
 })();
