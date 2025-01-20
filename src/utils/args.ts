@@ -10,5 +10,10 @@ export const args = yargs(hideBin(process.argv))
     type: 'string',
     description: 'Remove a package manager from the list',
   })
+  .option('exact', {
+    type: 'boolean',
+    alias: 'e',
+    description: 'Select a script if an exact match is found',
+  })
   .help()
   .parseSync();
