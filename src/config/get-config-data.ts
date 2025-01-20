@@ -8,8 +8,9 @@ export function getConfigData(): ConfigInterface {
   const configFile = useCoreHooks((root) => root['config.json']);
 
   try {
-    const configRaw = configFile.read();
-    return configRaw != null ? JSON.parse(configRaw) : fallbackConfig;
+    const raw = configFile.read();
+    const parsed = raw != null ? JSON.parse(raw) : fallbackConfig;
+    return { ...fallbackConfig, ...parsed };
   } catch {
     return fallbackConfig;
   }

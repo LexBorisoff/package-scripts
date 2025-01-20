@@ -3,7 +3,6 @@ import $_ from '@lexjs/prompts';
 import { getConfigData } from '../config/get-config-data.js';
 import { updateConfig } from '../config/update-config.js';
 import { logger } from '../utils/logger.js';
-import { updateTmp } from '../utils/update-tmp.js';
 
 import {
   selectPackageManager,
@@ -69,8 +68,9 @@ export async function removePackageManager(arg: string): Promise<void> {
   // select a new package manager if current is being removed
   if (managersToRemove.includes(currentManager.command)) {
     logger.warn(
-      `Current package manager "${currentManager.command}" is being removed`,
+      `Default package manager "${currentManager.command}" is being removed`,
     );
+    logger.log('');
 
     // construct remaining managers
     const remainingManagers = getPackageManagers();
@@ -89,7 +89,6 @@ export async function removePackageManager(arg: string): Promise<void> {
     }
 
     updateConfig({ packageManager: newCurrentManager });
-    updateTmp.packageManager(newCurrentManager);
     pmLogger.use(newCurrentManager);
   }
 

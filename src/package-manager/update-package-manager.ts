@@ -1,5 +1,4 @@
 import { updateConfig } from '../config/update-config.js';
-import { updateTmp } from '../utils/update-tmp.js';
 
 import {
   selectPackageManager,
@@ -7,7 +6,7 @@ import {
 } from './select-package-manager.js';
 import { pmLogger } from './utils/pm-logger.js';
 
-export async function usePackageManager(arg: string): Promise<void> {
+export async function updatePackageManager(arg: string): Promise<void> {
   const packageManager = await selectPackageManager(SelectPmReason.Update, {
     command: arg,
   });
@@ -17,6 +16,5 @@ export async function usePackageManager(arg: string): Promise<void> {
   }
 
   updateConfig({ packageManager });
-  updateTmp.packageManager(packageManager);
   pmLogger.use(packageManager);
 }

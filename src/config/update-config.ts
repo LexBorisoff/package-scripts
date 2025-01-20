@@ -10,10 +10,8 @@ export function updateConfig(
   config: Partial<ConfigInterface> | ConfigUpdaterFn,
 ): void {
   const currentConfig = getConfigData();
-  const updatedConfig: ConfigInterface =
-    typeof config === 'function'
-      ? { ...currentConfig, ...config(currentConfig) }
-      : { ...currentConfig, ...config };
+  const payload = typeof config === 'function' ? config(currentConfig) : config;
+  const updatedConfig: ConfigInterface = { ...currentConfig, ...payload };
 
   const configFile = useCoreHooks((root) => root['config.json']);
   configFile.write(JSON.stringify(updatedConfig));

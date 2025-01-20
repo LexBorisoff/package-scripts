@@ -7,4 +7,5 @@ export const fallbackConfig: ConfigInterface = {
   command: INITIAL_COMMAND,
   packageManager: defaultManagers.npm,
   managers: {},
+  ignorePackageManagerProp: false,
 };
