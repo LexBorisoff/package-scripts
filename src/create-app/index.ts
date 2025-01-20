@@ -9,7 +9,7 @@ import {
   selectPackageManager,
   SelectPmReason,
 } from '../package-manager/select-package-manager.js';
-import { updatePackageManager } from '../package-manager/update-package-manager.js';
+import { updateTmp } from '../utils/update-tmp.js';
 
 import { createScriptFiles } from './create-script-files.js';
 import { initializeApp } from './initialize-app.js';
@@ -33,7 +33,7 @@ import { linkDist } from './link-dist.js';
       createScriptFiles(command);
 
       updateConfig({ command, packageManager });
-      updatePackageManager(packageManager);
+      updateTmp.packageManager(packageManager);
     }
   }
 })();

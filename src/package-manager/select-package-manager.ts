@@ -3,45 +3,45 @@ import $_ from '@lexjs/prompts';
 import { updateConfig } from '../config/update-config.js';
 
 import { defaultManagers } from './default-managers.js';
-import { getPackageManagers } from './get-package-managers.js';
+import { getPackageManagers } from './utils/get-package-managers.js';
+import { getPmChoices, NEW_PM_OPTION } from './utils/get-pm-choices.js';
 
-import type { PackageManagerInterface } from '../types/package-manager.types.js';
+import type {
+  PackageManagerChoice,
+  PackageManagerInterface,
+} from '../types/package-manager.types.js';
 
 export enum SelectPmReason {
   InitializeApp = 'initialize-app',
   Update = 'update',
 }
 
-function updateConfigManagers(
-  command: string,
-  packageManager: PackageManagerInterface,
-): void {
+function updateConfigManagers(packageManager: PackageManagerInterface): void {
   updateConfig(({ managers }) => ({
     managers: {
       ...managers,
-      [command]: packageManager,
+      [packageManager.command]: packageManager,
     },
   }));
 }
 
-function getPmChoices(): { title: string; value: string }[] {
-  const managers = getPackageManagers();
-
-  return Object.values(managers)
-    .map(({ command }) => ({
-      title: command,
-      value: command,
-    }))
-    .concat({ title: 'other', value: 'other' });
+interface SelectOptions {
+  /**
+   * package manager command
+   */
+  command?: string;
+  /**
+   * choices to override for selection
+   */
+  choices?: PackageManagerChoice[];
 }
 
 /**
  * @param reason reason to select a package manager
- * @param command package manager command
  */
 export async function selectPackageManager(
   reason: SelectPmReason,
-  command?: string,
+  { command, choices }: SelectOptions = {},
 ): Promise<PackageManagerInterface | undefined> {
   const managers = getPackageManagers();
 
@@ -60,7 +60,7 @@ export async function selectPackageManager(
     const { packageManager } = await $_.autocomplete({
       name: 'packageManager',
       message: initialMessage,
-      choices: getPmChoices(),
+      choices: choices ?? getPmChoices(managers),
     });
 
     if (packageManager == null) {
@@ -68,7 +68,7 @@ export async function selectPackageManager(
     }
 
     // manager was selected
-    if (packageManager !== 'other') {
+    if (packageManager !== NEW_PM_OPTION) {
       return managers[packageManager];
     }
 
@@ -97,9 +97,13 @@ export async function selectPackageManager(
     initial: true,
   });
 
+  if (hasRunCommand == null) {
+    return undefined;
+  }
+
   if (!hasRunCommand) {
     const manager: PackageManagerInterface = { command, run: '' };
-    updateConfigManagers(command, manager);
+    updateConfigManagers(manager);
     return manager;
   }
 
@@ -114,6 +118,6 @@ export async function selectPackageManager(
   }
 
   const manager: PackageManagerInterface = { command, run };
-  updateConfigManagers(command, manager);
+  updateConfigManagers(manager);
   return manager;
 }

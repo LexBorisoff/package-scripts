@@ -6,5 +6,9 @@ export const args = yargs(hideBin(process.argv))
     type: 'string',
     description: 'Default package manager to use when running a script',
   })
+  .option('remove', {
+    type: 'string',
+    description: 'Remove a package manager from the list',
+  })
   .help()
   .parseSync();

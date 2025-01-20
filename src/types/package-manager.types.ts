@@ -10,3 +10,8 @@ export interface PackageManagers {
   yarn: PackageManagerInterface;
   bun: PackageManagerInterface;
 }
+
+export interface PackageManagerChoice {
+  title: string;
+  value: string;
+}

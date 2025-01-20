@@ -1,4 +1,4 @@
-import type { PackageManagerInterface } from '../types/package-manager.types.js';
+import type { PackageManagerInterface } from '../../types/package-manager.types.js';
 
 export function getPmCommand({
   command,
