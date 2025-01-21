@@ -26,7 +26,7 @@
     "dist"
   ],
   "bin": {
-    "create-package-scripts": "dist/create-app/create-app.js"
+    "create-package-scripts": "dist/create-app/index.js"
   },
   "keywords": [
     "package",
@@ -67,7 +67,7 @@
     "typescript-eslint": "^8.20.0"
   },
   "dependencies": {
-    "@lexjs/prompts": "^1.1.0",
+    "@lexjs/prompts": "^1.1.1",
     "chalk": "^4.1.2",
     "dotenv": "^16.4.7",
     "execa": "^9.5.2",

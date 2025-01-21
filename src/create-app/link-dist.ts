@@ -1,16 +1,10 @@
 import fs from 'node:fs';
 
-import { FsHooks } from 'fs-hooks';
-import { coreHooks } from 'fs-hooks/core';
-
 import { IS_WINDOWS, PACKAGE_NAME, PATHS } from '../constants.js';
-import { tree } from '../hooks/tree.js';
+import { useCoreHooks } from '../hooks/use-core-hooks.js';
 
 export function linkDist(): void {
-  const fsHooks = new FsHooks(PATHS.ROOT, tree);
-  const useCore = fsHooks.useHooks(coreHooks);
-
-  const distPath = useCore(
+  const distPath = useCoreHooks(
     ({ lib }) => lib.node_modules[PACKAGE_NAME].dist,
   ).getPath();
 

@@ -1,5 +1,17 @@
 export interface PackageManagerInterface {
   command: string;
   run: string;
-  install: string;
+}
+
+export interface PackageManagers {
+  [pm: string]: PackageManagerInterface;
+  npm: PackageManagerInterface;
+  pnpm: PackageManagerInterface;
+  yarn: PackageManagerInterface;
+  bun: PackageManagerInterface;
+}
+
+export interface PackageManagerChoice {
+  title: string;
+  value: string;
 }

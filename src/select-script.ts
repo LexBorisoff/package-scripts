@@ -1,13 +1,9 @@
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-
 import $_ from '@lexjs/prompts';
 
 import { args } from './utils/args.js';
+import { getPackageJson } from './utils/get-package-json.js';
 
-import type { PackageJson } from 'type-fest';
-
-const { _ } = args;
+const { _, verbose } = args;
 const match = _.map((arg) => arg.toString());
 
 function getMatchFn(script: string) {
@@ -15,19 +11,12 @@ function getMatchFn(script: string) {
 }
 
 export async function selectScript(): Promise<string | undefined> {
-  const filePath = path.resolve(process.cwd(), 'package.json');
+  const packageJson = getPackageJson();
 
-  if (!fs.existsSync(filePath)) {
-    throw new Error('package.json does not exist in current directory');
-  }
-
-  const json = fs.readFileSync(filePath, {
-    encoding: 'utf-8',
-  });
-
-  const contents: PackageJson = JSON.parse(json);
-
-  if (contents.scripts == null || Object.keys(contents.scripts).length === 0) {
+  if (
+    packageJson.scripts == null ||
+    Object.keys(packageJson.scripts).length === 0
+  ) {
     throw new Error('No scripts in package.json');
   }
 
@@ -49,7 +38,7 @@ export async function selectScript(): Promise<string | undefined> {
     >((acc, hook) => [...acc, ...lifecycle.map((e) => `${hook}${e}`)], [])
     .concat('prepare', 'prepublishOnly');
 
-  const choices = Object.entries(contents.scripts ?? {})
+  const choices = Object.entries(packageJson.scripts ?? {})
     // remove npm lifecycle hooks
     .filter(([key]) => !hooks.includes(key))
     // remove custom script lifecycle hooks
@@ -74,6 +63,16 @@ export async function selectScript(): Promise<string | undefined> {
   if (choices.length === 1) {
     const [script] = choices;
     return script.value;
+  }
+
+  // an exact script name was matched
+  if (match.length === 1 && !verbose) {
+    const [matchValue] = match;
+    const exactMatch = choices.find(({ value }) => value === matchValue)?.value;
+
+    if (exactMatch != null) {
+      return exactMatch;
+    }
   }
 
   // an array of scripts was matched

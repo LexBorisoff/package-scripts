@@ -1,4 +1,4 @@
-import { PACKAGE_NAME } from '../constants.js';
+import { CONFIG_FILE, PACKAGE_NAME } from '../constants.js';
 
 import type { TreeInterface } from 'fs-hooks';
 
@@ -7,11 +7,13 @@ export const initialTree = {
   lib: {},
   tmp: {
     script: '',
+    'package-manager': '',
   },
 } satisfies TreeInterface;
 
 export const tree = {
   ...initialTree,
+  [CONFIG_FILE]: '',
   lib: {
     node_modules: {
       [PACKAGE_NAME]: {
