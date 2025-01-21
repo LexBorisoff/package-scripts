@@ -36,7 +36,7 @@ class Paths {
   }
 
   get DIST_LINK(): string {
-    return path.resolve(this.BIN_DIR, this.DIST_LINK_NAME);
+    return path.resolve(this.ROOT, this.DIST_LINK_NAME);
   }
 
   get MAIN_FILE(): string {
