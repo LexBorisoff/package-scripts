@@ -58,7 +58,7 @@ export async function removePackageManager(arg: string): Promise<void> {
       instructions: false,
     });
 
-    if (selected == null) {
+    if (selected == null || selected.length === 0) {
       return;
     }
 
