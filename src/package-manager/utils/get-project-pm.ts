@@ -12,8 +12,8 @@ const supportedManagers = {
 
 /**
  * Returns a package manager object if
- * ignorePackageManagerProp config option is false and
- * "packageManager" property in package.json is present
+ * `ignorePackageManagerProp` config option is false and
+ * `packageManager` property in package.json is set
  */
 export function getProjectPm(): PackageManagerInterface | undefined {
   const { ignorePackageManagerProp } = getConfigData();

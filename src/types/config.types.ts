@@ -14,7 +14,7 @@ export interface ConfigInterface {
    */
   managers: Record<string, PackageManagerInterface>;
   /**
-   * Ignore "packageManager" property in package.json
+   * Ignore `packageManager` property in package.json
    */
   ignorePackageManagerProp: boolean;
 }

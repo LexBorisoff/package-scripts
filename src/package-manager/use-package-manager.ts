@@ -6,7 +6,7 @@ import {
 } from './select-package-manager.js';
 import { pmLogger } from './utils/pm-logger.js';
 
-export async function updatePackageManager(arg: string): Promise<void> {
+export async function usePackageManager(arg: string): Promise<void> {
   const packageManager = await selectPackageManager(SelectPmReason.Update, {
     command: arg,
   });

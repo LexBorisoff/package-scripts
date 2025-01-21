@@ -14,27 +14,26 @@ import { pmLogger } from './utils/pm-logger.js';
 
 import type { PackageManagerInterface } from '../types/package-manager.types.js';
 
-function removeFromConfig(managers: string[]): void {
+function removeFromConfig(pmCommands: string[]): void {
   updateConfig((config) => {
-    const updated = Object.entries(config.managers).reduce<
+    const managers = Object.entries(config.managers).reduce<
       Record<string, PackageManagerInterface>
     >((acc, [key, manager]) => {
-      if (!managers.includes(manager.command)) {
+      if (!pmCommands.includes(manager.command)) {
         const result = { ...acc, [key]: manager };
         return result;
       }
       return acc;
     }, {});
 
-    return { managers: updated };
+    return { managers };
   });
 
-  pmLogger.remove(managers);
+  pmLogger.remove(pmCommands);
 }
 
 export async function removePackageManager(arg: string): Promise<void> {
-  const managers = getConfigData().managers;
-  const currentManager = getConfigData().packageManager;
+  const { managers, packageManager } = getConfigData();
 
   if (Object.keys(managers).length === 0) {
     logger.warn('No package managers to remove');
@@ -42,8 +41,6 @@ export async function removePackageManager(arg: string): Promise<void> {
   }
 
   let managersToRemove: string[] = [];
-  const pmChoices = getPmChoices(managers, false);
-  const matches = pmChoices.filter(({ value }) => value.includes(arg));
 
   // command matches a manager from config
   if (arg !== '' && managers[arg] != null) {
@@ -51,10 +48,12 @@ export async function removePackageManager(arg: string): Promise<void> {
   }
   // select managers to remove
   else {
+    const pmChoices = getPmChoices(managers, false);
+
     const { selected } = await $_.autocompleteMultiselect({
       name: 'selected',
       message: 'Select package managers to remove',
-      choices: matches,
+      choices: pmChoices.filter(({ value }) => value.includes(arg)),
       instructions: false,
     });
 
@@ -66,9 +65,9 @@ export async function removePackageManager(arg: string): Promise<void> {
   }
 
   // select a new package manager if current is being removed
-  if (managersToRemove.includes(currentManager.command)) {
+  if (managersToRemove.includes(packageManager.command)) {
     logger.warn(
-      `Default package manager "${currentManager.command}" is being removed`,
+      `Default package manager "${packageManager.command}" is being removed`,
     );
     logger.log('');
 
@@ -84,6 +83,7 @@ export async function removePackageManager(arg: string): Promise<void> {
       SelectPmReason.Update,
       { choices: getPmChoices(remainingManagers) },
     );
+
     if (newCurrentManager == null) {
       return;
     }

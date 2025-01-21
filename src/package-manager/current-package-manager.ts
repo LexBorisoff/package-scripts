@@ -11,11 +11,11 @@ function logDefaultPm(): void {
 
 export function currentPackageManager(): void {
   try {
-    const pmFromPackageJson = getProjectPm();
+    const projectPm = getProjectPm();
 
-    if (pmFromPackageJson != null) {
+    if (projectPm != null) {
       logger.warn(
-        `${colors.cyan('>')} ${pmFromPackageJson.command} ${colors.gray('(current project)')}`,
+        `${colors.cyan('>')} ${projectPm.command} ${colors.gray('(current project)')}`,
       );
     }
 

@@ -4,7 +4,7 @@ import {
   currentPackageManager,
   ignorePackageManager,
   removePackageManager,
-  updatePackageManager,
+  usePackageManager,
 } from './package-manager/index.js';
 import { selectScript } from './select-script.js';
 import { args } from './utils/args.js';
@@ -16,7 +16,7 @@ const { _, use, verbose, remove, ignore } = args;
 (async function main() {
   try {
     if (use != null) {
-      await updatePackageManager(use);
+      await usePackageManager(use);
       return;
     }
 

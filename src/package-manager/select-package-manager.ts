@@ -25,7 +25,7 @@ function updateConfigManagers(packageManager: PackageManagerInterface): void {
   }));
 }
 
-interface SelectOptions {
+export interface SelectOptions {
   /**
    * package manager command
    */
@@ -52,14 +52,12 @@ export async function selectPackageManager(
 
   // command is not provided
   if (command == null || command === '') {
-    const initialMessage =
-      reason === SelectPmReason.InitializeApp
-        ? 'What is your default package manager?'
-        : 'Select a package manager';
-
     const { packageManager } = await $_.autocomplete({
       name: 'packageManager',
-      message: initialMessage,
+      message:
+        reason === SelectPmReason.InitializeApp
+          ? 'What is your default package manager?'
+          : 'Select a package manager',
       choices: choices ?? getPmChoices(managers),
     });
 
