@@ -55,6 +55,11 @@ export async function removePackageManager(arg: string): Promise<void> {
       message: 'Select package managers to remove',
       choices: pmChoices.filter(({ value }) => value.includes(arg)),
       instructions: false,
+      suggest(input, list) {
+        return Promise.resolve(
+          list.filter(({ title }) => title.includes(input)),
+        );
+      },
     });
 
     if (selected == null || selected.length === 0) {
