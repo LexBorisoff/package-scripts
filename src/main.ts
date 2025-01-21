@@ -11,7 +11,7 @@ import { args } from './utils/args.js';
 import { logger } from './utils/logger.js';
 import { updateTmp } from './utils/update-tmp.js';
 
-const { use, verbose, remove, ignore } = args;
+const { _, use, verbose, remove, ignore } = args;
 
 (async function main() {
   try {
@@ -20,7 +20,7 @@ const { use, verbose, remove, ignore } = args;
       return;
     }
 
-    if (verbose) {
+    if (verbose && _.length === 0) {
       currentPackageManager();
       return;
     }

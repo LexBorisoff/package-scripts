@@ -16,7 +16,7 @@ ${functionName}() {
     >"${PATHS.PACKAGE_MANAGER_FILE}"
 
     # run the script
-    if test -n "$script"; then
+    if test -n "$script" && test -n "$package_manager"; then
       $package_manager "$script"
     fi
   fi
@@ -36,7 +36,7 @@ if test -f "${PATHS.MAIN_FILE}"; then
   >"${PATHS.PACKAGE_MANAGER_FILE}"
 
   # run the script
-  if test -n "$script"; then
+  if test -n "$script" && test -n "$package_manager"; then
     $package_manager "$script"
     unset $package_manager
     unset $script
@@ -57,7 +57,7 @@ if (Test-Path -Path "${PATHS.MAIN_FILE}") {
   Clear-Content -Path "${PATHS.PACKAGE_MANAGER_FILE}"
 
   # run the script
-  if (![string]::IsNullOrEmpty($Script)) {
+  if (![string]::IsNullOrEmpty($Script) -and ![string]::IsNullOrEmpty($PackageManager)) {
     Invoke-Expression "$PackageManager $Script"
   }
 }

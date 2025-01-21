@@ -2,14 +2,12 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 export const args = yargs(hideBin(process.argv))
+  .usage('scripts [<filter args> [--verbose | -v]]')
+  .usage('scripts [--verbose | -v]')
+  .usage('scripts <OPTION>')
   .option('use', {
     type: 'string',
-    description: 'Default package manager to use when running a script',
-  })
-  .option('verbose', {
-    type: 'boolean',
-    alias: 'v',
-    description: 'Show currently used package manager',
+    description: 'Set a default package manager',
   })
   .option('remove', {
     type: 'string',
@@ -19,10 +17,11 @@ export const args = yargs(hideBin(process.argv))
     type: 'boolean',
     description: 'Ignore "packageManager" property in package.json',
   })
-  .option('exact', {
+  .option('verbose', {
     type: 'boolean',
-    alias: 'e',
-    description: 'Select a script if an exact match is found',
+    alias: 'v',
+    hidden: true,
   })
   .help()
+  .version()
   .parseSync();
