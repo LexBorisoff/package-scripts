@@ -3,7 +3,7 @@ import $_ from '@lexjs/prompts';
 import { args } from './utils/args.js';
 import { getPackageJson } from './utils/get-package-json.js';
 
-const { _, verbose } = args;
+const { _, i: interactive } = args;
 const match = _.map((arg) => arg.toString());
 
 function getMatchFn(script: string) {
@@ -38,7 +38,7 @@ export async function selectScript(): Promise<string | undefined> {
     >((acc, hook) => [...acc, ...lifecycle.map((e) => `${hook}${e}`)], [])
     .concat('prepare', 'prepublishOnly');
 
-  const choices = Object.entries(packageJson.scripts ?? {})
+  const packageScripts = Object.entries(packageJson.scripts ?? {})
     // remove npm lifecycle hooks
     .filter(([key]) => !hooks.includes(key))
     // remove custom script lifecycle hooks
@@ -48,30 +48,37 @@ export async function selectScript(): Promise<string | undefined> {
           ([script]) => key === `pre${script}` || key === `post${script}`,
         ),
     )
-    .filter(([key]) => match.length === 0 || match.every(getMatchFn(key)))
     .map(([key, value]) => ({
       title: key,
       value: key,
       description: value,
     }));
 
-  if (choices.length === 0) {
+  const matchedScripts = packageScripts.filter(
+    ({ value }) => match.length === 0 || match.every(getMatchFn(value)),
+  );
+
+  if (matchedScripts.length === 0) {
     throw new Error('No matching scripts');
   }
 
   // a single script was matched
-  if (choices.length === 1) {
-    const [script] = choices;
-    return script.value;
-  }
+  if (!interactive) {
+    // an exact script name was matched
+    if (match.length === 1) {
+      const [matchValue] = match;
+      const exactMatch = matchedScripts.find(
+        ({ value }) => value === matchValue,
+      )?.value;
 
-  // an exact script name was matched
-  if (match.length === 1 && !verbose) {
-    const [matchValue] = match;
-    const exactMatch = choices.find(({ value }) => value === matchValue)?.value;
+      if (exactMatch != null) {
+        return exactMatch;
+      }
+    }
 
-    if (exactMatch != null) {
-      return exactMatch;
+    if (matchedScripts.length === 1) {
+      const [script] = matchedScripts;
+      return script.value;
     }
   }
 
@@ -80,12 +87,13 @@ export async function selectScript(): Promise<string | undefined> {
     name: 'script',
     message: 'Type to find a script',
     suggest(input: string | number, list) {
-      const inputArray = `${input}`.split(/\s+/);
+      const inputStr = `${input}`;
+      const inputArray = inputStr.length === 0 ? match : inputStr.split(/\s+/);
       return Promise.resolve(
         list.filter(({ title }) => inputArray.every(getMatchFn(title))),
       );
     },
-    choices,
+    choices: packageScripts,
   });
 
   if (script != null) {
