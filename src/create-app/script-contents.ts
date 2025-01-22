@@ -1,28 +1,5 @@
 import { PATHS } from '../constants.js';
 
-export const bashFunction = (
-  functionName: string,
-): string => `#!/usr/bin/env bash
-
-${functionName}() {
-  if test -f "${PATHS.MAIN_FILE}"; then
-    # get the script name
-    node "${PATHS.MAIN_FILE}" "$@"
-    local script=$(<"${PATHS.SCRIPT_FILE}")
-    local package_manager=$(<"${PATHS.PACKAGE_MANAGER_FILE}")
-    
-    # clear tmp files
-    >"${PATHS.SCRIPT_FILE}"
-    >"${PATHS.PACKAGE_MANAGER_FILE}"
-
-    # run the script
-    if test -n "$script" && test -n "$package_manager"; then
-      $package_manager "$script"
-    fi
-  fi
-}
-`;
-
 export const bashScript = `#!/usr/bin/env bash
 
 if test -f "${PATHS.MAIN_FILE}"; then
@@ -38,8 +15,8 @@ if test -f "${PATHS.MAIN_FILE}"; then
   # run the script
   if test -n "$script" && test -n "$package_manager"; then
     $package_manager "$script"
-    unset $package_manager
-    unset $script
+    unset package_manager
+    unset script
   fi
 fi
 `;

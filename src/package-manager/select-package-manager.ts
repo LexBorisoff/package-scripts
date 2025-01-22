@@ -59,6 +59,11 @@ export async function selectPackageManager(
           ? 'What is your default package manager?'
           : 'Select a package manager',
       choices: choices ?? getPmChoices(managers),
+      suggest(input, list) {
+        return Promise.resolve(
+          list.filter(({ title }) => title.includes(input)),
+        );
+      },
     });
 
     if (packageManager == null) {
