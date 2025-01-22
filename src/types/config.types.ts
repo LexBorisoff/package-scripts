@@ -6,13 +6,9 @@ export interface ConfigInterface {
    */
   command: string;
   /**
-   * Current package manager
+   * default package manager
    */
   packageManager: PackageManagerInterface;
-  /**
-   * Package managers other than default ones
-   */
-  managers: Record<string, PackageManagerInterface>;
   /**
    * Ignore `packageManager` property in package.json
    */
