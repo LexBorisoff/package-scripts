@@ -5,6 +5,7 @@ import { getPmCommand } from '../package-manager/utils/get-pm-command.js';
 import { getProjectPm } from '../package-manager/utils/get-project-pm.js';
 
 import { args } from './args.js';
+import { parseArguments } from './parse-arguments.js';
 
 function checkTmpDir(): void {
   const rootDir = useCoreHooks((root) => root);
@@ -34,5 +35,13 @@ export const updateTmp = {
 
     const scriptFile = useCoreHooks(({ tmp }) => tmp.script);
     scriptFile.write(script);
+  },
+
+  scriptArguments(): void {
+    checkTmpDir();
+
+    const { passThroughArgs } = parseArguments();
+    const argumentsFile = useCoreHooks(({ tmp }) => tmp.arguments);
+    argumentsFile.write(passThroughArgs.join(' '));
   },
 };
