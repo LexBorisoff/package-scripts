@@ -15,9 +15,10 @@ if test -f "${PATHS.MAIN_FILE}"; then
   # run the script
   if test -n "$script" && test -n "$package_manager"; then
     $package_manager "$script"
-    unset package_manager
-    unset script
   fi
+
+  unset package_manager
+  unset script
 fi
 `;
 
