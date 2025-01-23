@@ -2,30 +2,24 @@
 
 import {
   currentPackageManager,
-  ignorePackageManager,
-  usePackageManager,
+  defaultPackageManager,
 } from './package-manager/index.js';
 import { selectScript } from './select-script.js';
 import { args } from './utils/args.js';
 import { logger } from './utils/logger.js';
 import { updateTmp } from './utils/update-tmp.js';
 
-const { use, manager, config } = args;
+const { _, use, manager } = args;
 
 (async function main() {
   try {
-    if (use != null) {
-      await usePackageManager(use);
+    if (use != null && _.length === 0) {
+      await defaultPackageManager(use);
       return;
     }
 
     if (manager) {
       currentPackageManager();
-      return;
-    }
-
-    if (config != null) {
-      await ignorePackageManager();
       return;
     }
 

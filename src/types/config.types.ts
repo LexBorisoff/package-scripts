@@ -9,8 +9,4 @@ export interface ConfigInterface {
    * default package manager
    */
   packageManager: PackageManagerInterface;
-  /**
-   * Ignore `packageManager` property in package.json
-   */
-  ignorePackageManagerProp: boolean;
 }

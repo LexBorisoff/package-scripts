@@ -3,7 +3,7 @@ import $_ from '@lexjs/prompts';
 import { args } from './utils/args.js';
 import { getPackageJson } from './utils/get-package-json.js';
 
-const { _, i: interactive } = args;
+const { _, select } = args;
 const match = _.map((arg) => arg.toString());
 
 function getMatchFn(script: string) {
@@ -63,7 +63,7 @@ export async function selectScript(): Promise<string | undefined> {
   }
 
   // a single script was matched
-  if (!interactive) {
+  if (!select) {
     // an exact script name was matched
     if (match.length === 1) {
       const [matchValue] = match;

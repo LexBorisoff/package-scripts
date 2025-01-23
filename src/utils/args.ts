@@ -3,38 +3,24 @@ import { hideBin } from 'yargs/helpers';
 
 import { getConfigData } from '../config/get-config-data.js';
 
-const group = {
-  scripts: `Script Options`,
-  packageManager: `Package Manager Options`,
-  config: `Config Options`,
-};
-
 export const args = yargs(hideBin(process.argv))
   .scriptName(getConfigData().command)
   .usage(`Usage: $0 [OPTION]... [ARG]...`)
   .usage(`Interactively select and run a package script`)
-  .option('i', {
+  .option('select', {
+    alias: 's',
     type: 'boolean',
-    description: 'Trigger interactive mode',
-    group: group.scripts,
+    description: 'Select a script even if exactly matched',
   })
   .option('use', {
     type: 'string',
-    description: 'Set the default package manager',
+    description: 'Set a package manager (default / current run)',
     alias: 'u',
-    group: group.packageManager,
   })
   .option('manager', {
     type: 'boolean',
-    description: 'Display package manager in current project',
+    description: 'Show which package manager is currently used',
     alias: 'm',
-    group: group.packageManager,
-  })
-  .option('config', {
-    type: 'boolean',
-    description: 'Change CLI configuration',
-    alias: 'c',
-    group: group.config,
   })
   .help()
   .version()
