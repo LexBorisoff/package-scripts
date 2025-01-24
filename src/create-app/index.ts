@@ -42,25 +42,25 @@ function isEmpty(str: string | undefined): str is undefined | '' {
     }
   }
 
-  let overrideCommand = false;
+  let renameCommand = false;
   if (!isEmpty(command)) {
     logger.warn(
       `${PACKAGE_NAME} command is set as ${chalk.underline(command)}\n`,
     );
 
-    const { override } = await $_.toggle({
+    const { rename } = await $_.toggle({
       message: 'Do you want to rename it?',
-      name: 'override',
+      name: 'rename',
     });
 
-    if (override == null) {
+    if (rename == null) {
       return;
     }
 
-    overrideCommand = override;
+    renameCommand = rename;
   }
 
-  if (isEmpty(command) || overrideCommand) {
+  if (isEmpty(command) || renameCommand) {
     const result = await $_.text({
       name: 'command',
       message: 'What should be the command name?',
