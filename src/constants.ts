@@ -1,5 +1,4 @@
 import os from 'node:os';
-import path from 'node:path';
 
 import { getProjectInfo } from './utils/get-project-info.js';
 
@@ -14,46 +13,4 @@ export const PACKAGE_VERSION = getProjectInfo().version!;
 export const INITIAL_COMMAND = 'scripts';
 export const CONFIG_FILE = 'config.json';
 
-class Paths {
-  get ROOT(): string {
-    return path.resolve(os.homedir(), `.${PACKAGE_NAME}`);
-  }
-
-  get BIN_DIR(): string {
-    return path.resolve(this.ROOT, 'bin');
-  }
-
-  get LIB_DIR(): string {
-    return path.resolve(this.ROOT, 'lib');
-  }
-
-  get TMP_DIR(): string {
-    return path.resolve(this.ROOT, 'tmp');
-  }
-
-  get DIST_LINK_NAME(): string {
-    return '.dist';
-  }
-
-  get DIST_LINK(): string {
-    return path.resolve(this.ROOT, this.DIST_LINK_NAME);
-  }
-
-  get MAIN_FILE(): string {
-    return path.resolve(this.DIST_LINK, 'main.js');
-  }
-
-  get SCRIPT_FILE(): string {
-    return path.resolve(this.TMP_DIR, 'script');
-  }
-
-  get ARGUMENTS_FILE(): string {
-    return path.resolve(this.TMP_DIR, 'arguments');
-  }
-
-  get PACKAGE_MANAGER_FILE(): string {
-    return path.resolve(this.TMP_DIR, 'package-manager');
-  }
-}
-
-export const PATHS = new Paths();
+export const PACKAGE_MANAGERS = ['npm', 'pnpm', 'yarn', 'bun'];

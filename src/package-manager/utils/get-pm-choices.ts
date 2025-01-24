@@ -1,11 +1,14 @@
-import { defaultManagers } from '../default-managers.js';
+import { PACKAGE_MANAGERS } from '../../constants.js';
 
-import type { PackageManagerChoice } from '../../types/package-manager.types.js';
+export interface PackageManagerChoice {
+  title: string;
+  value: string;
+}
 
 export function getPmChoices(): PackageManagerChoice[] {
-  const choices = Object.values(defaultManagers).map(({ command }) => ({
-    title: command,
-    value: command,
+  const choices = Object.values(PACKAGE_MANAGERS).map((value) => ({
+    title: value,
+    value,
   }));
 
   return choices;

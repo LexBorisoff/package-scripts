@@ -1,11 +1,11 @@
 import $_ from '@lexjs/prompts';
 
 import { args } from './utils/args.js';
+import { getArgs } from './utils/get-args.js';
 import { getPackageJson } from './utils/get-package-json.js';
-import { parseArguments } from './utils/parse-arguments.js';
 
 const { select } = args;
-const { commandArgs: _ } = parseArguments();
+const { commandArgs: _ } = getArgs();
 
 function getMatchFn(script: string) {
   return (value: string) => script.toLowerCase().includes(value.toLowerCase());

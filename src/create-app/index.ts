@@ -18,22 +18,14 @@ import { initializeApp } from './initialize-app.js';
 import { linkDist } from './link-dist.js';
 
 import type { ConfigInterface } from '../types/config.types.js';
-import type { PackageManagerInterface } from '../types/package-manager.types.js';
 
-async function initialize(
-  command: string,
-  packageManager: PackageManagerInterface,
-): Promise<void> {
-  logger.info('Initializing ...');
-  await initializeApp();
-  linkDist();
-  createScriptFiles(command);
-  updateConfig({ command, packageManager });
+function isEmpty(str: string | undefined): str is undefined | '' {
+  return str == null || str === '';
 }
 
 (async function createApp(): Promise<void> {
   let command: string | undefined;
-  let packageManager: PackageManagerInterface | undefined;
+  let packageManager: string | undefined;
 
   // get current config data if exists
   const rootDir = useCoreHooks((root) => root);
@@ -50,28 +42,28 @@ async function initialize(
       packageManager = config?.packageManager;
     }
 
-    if (command != null) {
+    if (!isEmpty(command)) {
       logger.log(
         `  ${colors.green('✔')} command name: ${colors.yellow(command)}`,
       );
     } else {
-      logger.warn(`  ! no command name`);
+      logger.error(`  ! no command name`);
     }
 
-    if (packageManager?.command != null) {
+    if (!isEmpty(packageManager)) {
       logger.log(
         `  ${colors.green('✔')} package manager: ${colors.yellow(
-          packageManager.command,
+          packageManager,
         )}`,
       );
     } else {
-      logger.warn(`  ! no package manager`);
+      logger.error(`  ! no package manager`);
     }
 
     logger.log('');
   }
 
-  if (command == null) {
+  if (isEmpty(command)) {
     const result = await $_.text({
       name: 'command',
       message: 'What should be the command name?',
@@ -85,7 +77,7 @@ async function initialize(
     command = result.command;
   }
 
-  if (packageManager?.command == null) {
+  if (isEmpty(packageManager)) {
     packageManager = await selectPackageManager(SelectPmReason.InitializeApp);
 
     if (packageManager == null) {
@@ -94,6 +86,11 @@ async function initialize(
   }
 
   if (packageManager != null) {
-    initialize(command, packageManager);
+    logger.info('Initializing ...');
+
+    await initializeApp();
+    linkDist();
+    createScriptFiles(command);
+    updateConfig({ command, packageManager });
   }
 })();
