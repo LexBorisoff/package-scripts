@@ -14,5 +14,7 @@ export async function defaultPackageManager(arg: string): Promise<void> {
   }
 
   updateConfig({ packageManager });
-  logger.log(`Using ${logger.severity.warn(packageManager)} package manager`);
+  logger.log(
+    `Set ${logger.severity.warn(packageManager)} as the default package manager`,
+  );
 }

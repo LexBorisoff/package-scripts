@@ -9,16 +9,14 @@ import { updateTmp } from './update-tmp.js';
 import { args } from './utils/args.js';
 import { logger } from './utils/logger.js';
 
-const { _, use, manager } = args;
-
 (async function main() {
   try {
-    if (use != null && _.length === 0) {
-      await defaultPackageManager(use);
+    if (args.default != null) {
+      await defaultPackageManager(args.default);
       return;
     }
 
-    if (manager) {
+    if (args.which) {
       currentPackageManager();
       return;
     }
