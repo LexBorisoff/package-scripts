@@ -1,12 +1,13 @@
 import { createTree, FsHooks } from 'fs-hooks';
 import { coreHooks } from 'fs-hooks/core';
 
-import { CONFIG_FILE, IS_DEV, PACKAGE_NAME, PATHS } from '../constants.js';
+import { CONFIG_FILE, IS_DEV, PACKAGE_NAME } from '../constants.js';
 import { npmCommands, npmHooks } from '../hooks/npm.hooks.js';
 import { initialTree } from '../hooks/tree.js';
+import { paths } from '../paths.js';
 
 export async function initializeApp(): Promise<void> {
-  const fsHooks = new FsHooks(PATHS.ROOT, initialTree);
+  const fsHooks = new FsHooks(paths.root, initialTree);
   createTree(fsHooks);
 
   // create config file

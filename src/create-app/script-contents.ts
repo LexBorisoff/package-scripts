@@ -1,18 +1,18 @@
-import { PATHS } from '../constants.js';
+import { paths } from '../paths.js';
 
 export const bashScript = `#!/usr/bin/env bash
 
-if test -f "${PATHS.MAIN_FILE}"; then
+if test -f "${paths.main}"; then
   # get the script name
-  node "${PATHS.MAIN_FILE}" "$@"
-  script=$(<"${PATHS.SCRIPT_FILE}")
-  arguments=$(<"${PATHS.ARGUMENTS_FILE}")
-  package_manager=$(<"${PATHS.PACKAGE_MANAGER_FILE}")
+  node "${paths.main}" "$@"
+  script=$(<"${paths.script}")
+  arguments=$(<"${paths.arguments}")
+  package_manager=$(<"${paths.packageManager}")
 
   # clear tmp files
-  >"${PATHS.SCRIPT_FILE}"
-  >"${PATHS.ARGUMENTS_FILE}"
-  >"${PATHS.PACKAGE_MANAGER_FILE}"
+  >"${paths.script}"
+  >"${paths.arguments}"
+  >"${paths.packageManager}"
 
   # run the script
   if test -n "$script" && test -n "$package_manager"; then
@@ -31,17 +31,17 @@ fi
 
 export const powershellScript = `#!/usr/bin/env pwsh
 
-if (Test-Path -Path "${PATHS.MAIN_FILE}") {
+if (Test-Path -Path "${paths.main}") {
   # get the script name  
-  node "${PATHS.MAIN_FILE}" $args
-  $Script = Get-Content -Path "${PATHS.SCRIPT_FILE}" -ErrorAction SilentlyContinue
-  $Arguments = Get-Content -Path "${PATHS.ARGUMENTS_FILE}" -ErrorAction SilentlyContinue
-  $PackageManager = Get-Content -Path "${PATHS.PACKAGE_MANAGER_FILE}" -ErrorAction SilentlyContinue
+  node "${paths.main}" $args
+  $Script = Get-Content -Path "${paths.script}" -ErrorAction SilentlyContinue
+  $Arguments = Get-Content -Path "${paths.arguments}" -ErrorAction SilentlyContinue
+  $PackageManager = Get-Content -Path "${paths.packageManager}" -ErrorAction SilentlyContinue
 
   # clear tmp files
-  Clear-Content -Path "${PATHS.SCRIPT_FILE}"
-  Clear-Content -Path "${PATHS.ARGUMENTS_FILE}"
-  Clear-Content -Path "${PATHS.PACKAGE_MANAGER_FILE}"
+  Clear-Content -Path "${paths.script}"
+  Clear-Content -Path "${paths.arguments}"
+  Clear-Content -Path "${paths.packageManager}"
 
   # run the script
   if (![string]::IsNullOrEmpty($Script) -and ![string]::IsNullOrEmpty($PackageManager)) {

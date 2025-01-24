@@ -1,30 +1,14 @@
 import $_ from '@lexjs/prompts';
 import chalk from 'chalk';
 
+import { PACKAGE_MANAGERS } from '../constants.js';
 import { logger } from '../utils/logger.js';
 
-import { defaultManagers } from './default-managers.js';
 import { getPmChoices } from './utils/get-pm-choices.js';
-
-import type {
-  PackageManagerChoice,
-  PackageManagerInterface,
-} from '../types/package-manager.types.js';
 
 export enum SelectPmReason {
   InitializeApp = 'initialize-app',
   Update = 'update',
-}
-
-export interface SelectOptions {
-  /**
-   * package manager command
-   */
-  command?: string;
-  /**
-   * choices to override for selection
-   */
-  choices?: PackageManagerChoice[];
 }
 
 /**
@@ -32,17 +16,15 @@ export interface SelectOptions {
  */
 export async function selectPackageManager(
   reason: SelectPmReason,
-  { command, choices }: SelectOptions = {},
-): Promise<PackageManagerInterface | undefined> {
+  command?: string,
+): Promise<string | undefined> {
   // command matches a manager from config
   if (command != null && command !== '') {
-    if (defaultManagers[command] != null) {
-      return defaultManagers[command];
+    if (PACKAGE_MANAGERS.includes(command)) {
+      return command;
     }
 
-    logger.warn(
-      `${chalk.bold.italic(command)} does not match a package manager`,
-    );
+    logger.error(`! ${chalk.underline(command)} is not valid\n`);
   }
 
   const { packageManager } = await $_.autocomplete({
@@ -51,15 +33,11 @@ export async function selectPackageManager(
       reason === SelectPmReason.InitializeApp
         ? 'What is your default package manager?'
         : 'Select a package manager',
-    choices: choices ?? getPmChoices(),
+    choices: getPmChoices(),
     suggest(input, list) {
       return Promise.resolve(list.filter(({ title }) => title.includes(input)));
     },
   });
 
-  if (packageManager == null) {
-    return undefined;
-  }
-
-  return defaultManagers[packageManager];
+  return packageManager;
 }

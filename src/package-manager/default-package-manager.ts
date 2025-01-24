@@ -1,20 +1,18 @@
 import { updateConfig } from '../config/update-config.js';
+import { logger } from '../utils/logger.js';
 
 import {
   selectPackageManager,
   SelectPmReason,
 } from './select-package-manager.js';
-import { pmLogger } from './utils/pm-logger.js';
 
 export async function defaultPackageManager(arg: string): Promise<void> {
-  const packageManager = await selectPackageManager(SelectPmReason.Update, {
-    command: arg,
-  });
+  const packageManager = await selectPackageManager(SelectPmReason.Update, arg);
 
   if (packageManager == null) {
     return;
   }
 
   updateConfig({ packageManager });
-  pmLogger.use(packageManager);
+  logger.log(`Using ${logger.severity.warn(packageManager)} package manager`);
 }

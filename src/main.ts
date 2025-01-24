@@ -5,9 +5,9 @@ import {
   defaultPackageManager,
 } from './package-manager/index.js';
 import { selectScript } from './select-script.js';
+import { updateTmp } from './update-tmp.js';
 import { args } from './utils/args.js';
 import { logger } from './utils/logger.js';
-import { updateTmp } from './utils/update-tmp.js';
 
 const { _, use, manager } = args;
 
@@ -26,9 +26,7 @@ const { _, use, manager } = args;
     const script = await selectScript();
 
     if (script != null) {
-      updateTmp.script(script);
-      updateTmp.scriptArguments();
-      updateTmp.packageManager();
+      updateTmp(script);
     }
   } catch (error) {
     if (error instanceof Error) {

@@ -6,25 +6,20 @@ import { getProjectPm } from './utils/get-project-pm.js';
 
 function logDefaultPm(): void {
   const { packageManager } = getConfigData();
-  logger.warn(`${packageManager.command} ${colors.gray('(default)')}`);
+  logger.warn(`${packageManager} ${colors.gray('(default)')}`);
 }
 
 export function currentPackageManager(): void {
   try {
     const projectPm = getProjectPm();
-
     if (projectPm != null) {
-      logger.warn(
-        `${colors.cyan('>')} ${projectPm.command} ${colors.gray('(current project)')}`,
-      );
+      logger.warn(`${projectPm} ${colors.gray('(current project)')}`);
     }
-
-    logDefaultPm();
   } catch (error) {
-    if (error instanceof PackageJsonError) {
-      logDefaultPm();
-    } else {
+    if (!(error instanceof PackageJsonError)) {
       throw error;
     }
+  } finally {
+    logDefaultPm();
   }
 }

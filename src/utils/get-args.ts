@@ -4,7 +4,7 @@ const toString = (value: string | number): string => `${value}`;
 const _ = args._.map(toString);
 const passThrough = args['--']?.map(toString);
 
-export function parseArguments(): {
+export function getArgs(): {
   commandArgs: string[];
   passThroughArgs: string[];
 } {
