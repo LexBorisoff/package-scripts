@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 import $_ from '@lexjs/prompts';
+import chalk from 'chalk';
 import 'dotenv/config';
 
 import { updateConfig } from '../config/update-config.js';
-import { CONFIG_FILE, INITIAL_COMMAND } from '../constants.js';
+import { CONFIG_FILE, INITIAL_COMMAND, PACKAGE_NAME } from '../constants.js';
 import { useCoreHooks } from '../hooks/use-core-hooks.js';
 import {
   selectPackageManager,
   SelectPmReason,
 } from '../package-manager/select-package-manager.js';
-import { colors, logger } from '../utils/logger.js';
+import { logger } from '../utils/logger.js';
 import { parseData } from '../utils/parse-data.js';
 
 import { createScriptFiles } from './create-script-files.js';
@@ -32,8 +33,6 @@ function isEmpty(str: string | undefined): str is undefined | '' {
   const configExists = rootDir.exists(CONFIG_FILE);
 
   if (configExists) {
-    logger.info('Found local config');
-
     const configData = rootDir.fileRead(CONFIG_FILE);
 
     if (configData != null) {
@@ -41,29 +40,27 @@ function isEmpty(str: string | undefined): str is undefined | '' {
       command = config?.command;
       packageManager = config?.packageManager;
     }
-
-    if (!isEmpty(command)) {
-      logger.log(
-        `  ${colors.green('✔')} command name: ${colors.yellow(command)}`,
-      );
-    } else {
-      logger.error(`  ! no command name`);
-    }
-
-    if (!isEmpty(packageManager)) {
-      logger.log(
-        `  ${colors.green('✔')} package manager: ${colors.yellow(
-          packageManager,
-        )}`,
-      );
-    } else {
-      logger.error(`  ! no package manager`);
-    }
-
-    logger.log('');
   }
 
-  if (isEmpty(command)) {
+  let overrideCommand = false;
+  if (!isEmpty(command)) {
+    logger.warn(
+      `${PACKAGE_NAME} command is set as ${chalk.underline(command)}\n`,
+    );
+
+    const { override } = await $_.toggle({
+      message: 'Do you want to rename it?',
+      name: 'override',
+    });
+
+    if (override == null) {
+      return;
+    }
+
+    overrideCommand = override;
+  }
+
+  if (isEmpty(command) || overrideCommand) {
     const result = await $_.text({
       name: 'command',
       message: 'What should be the command name?',
@@ -86,8 +83,6 @@ function isEmpty(str: string | undefined): str is undefined | '' {
   }
 
   if (packageManager != null) {
-    logger.info('Initializing ...');
-
     await initializeApp();
     linkDist();
     createScriptFiles(command);
