@@ -4,63 +4,75 @@ import { hideBin } from 'yargs/helpers';
 import { getConfigData } from '../config/get-config-data.js';
 
 const group = {
-  packageManager: 'Override Default Package Manager:',
-  config: 'Config Options:',
-  other: 'Other Options:',
+  script: 'Script Options:',
+  packageManager: 'Package Manager Options:',
+};
+
+const desc = {
+  runWith(packageManager: string): string {
+    return `Run a script using ${packageManager}`;
+  },
 };
 
 const parsed = yargs(hideBin(process.argv))
   .scriptName(getConfigData().command)
   .usage(`Usage: $0 [OPTION]... [ARG]...`)
-  .usage(`Interactively select and run package scripts`)
+  .usage(`Interactively select and run scripts using any package manager`)
   .option('npm', {
     type: 'boolean',
-    description: 'Use npm for current script run',
+    description: desc.runWith('npm'),
     alias: 'n',
-    group: group.packageManager,
+    group: group.script,
     conflicts: ['pnpm', 'yarn', 'bun', 'default', 'which'],
   })
   .option('pnpm', {
     type: 'boolean',
-    description: 'Use pnpm for current script run',
+    description: desc.runWith('pnpm'),
     alias: 'p',
-    group: group.packageManager,
+    group: group.script,
     conflicts: ['npm', 'yarn', 'bun', 'default', 'which'],
   })
   .option('yarn', {
     type: 'boolean',
-    description: 'Use yarn for current script run',
-    group: group.packageManager,
+    description: desc.runWith('yarn'),
+    group: group.script,
     alias: 'y',
     conflicts: ['npm', 'pnpm', 'bun', 'default', 'which'],
   })
   .option('bun', {
     type: 'boolean',
-    description: 'Use bun for current script run',
-    group: group.packageManager,
+    description: desc.runWith('bun'),
+    group: group.script,
     alias: 'b',
     conflicts: ['npm', 'pnpm', 'yarn', 'default', 'which'],
+  })
+  .option('select', {
+    type: 'boolean',
+    description: 'Prompt selection if a single script is matched',
+    alias: 's',
+    group: group.script,
+    conflicts: ['first', 'default', 'which'],
+  })
+  .option('first', {
+    type: 'boolean',
+    description: 'Pick the first matched script without prompt',
+    alias: 'f',
+    group: group.script,
+    conflicts: ['select', 'default', 'which'],
   })
   .option('default', {
     type: 'string',
     description: 'Set the default package manager',
     alias: 'd',
-    group: group.config,
-    conflicts: ['select', 'npm', 'pnpm', 'yarn', 'bun', 'which'],
-  })
-  .option('select', {
-    type: 'boolean',
-    description: 'Prompt selection even if a script is matched',
-    alias: 's',
-    group: group.other,
-    conflicts: ['default', 'which'],
+    group: group.packageManager,
+    conflicts: ['select', 'first', 'npm', 'pnpm', 'yarn', 'bun', 'which'],
   })
   .option('which', {
     type: 'boolean',
     description: 'Show which package which is currently used',
     alias: 'w',
-    group: group.other,
-    conflicts: ['select', 'npm', 'pnpm', 'yarn', 'bun', 'default'],
+    group: group.packageManager,
+    conflicts: ['select', 'first', 'npm', 'pnpm', 'yarn', 'bun', 'default'],
   })
   .help()
   .version()
