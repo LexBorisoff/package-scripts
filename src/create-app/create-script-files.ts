@@ -17,7 +17,7 @@ export function createScriptFiles(command: string): void {
   binFiles
     .filter((file) => {
       const filePath = path.resolve(binDir.getPath(), file);
-      const isCommandFile = Object.values(scriptNames);
+      const isCommandFile = Object.values(scriptNames).includes(file);
       return fs.statSync(filePath).isFile() && !isCommandFile;
     })
     .forEach((file) => {
