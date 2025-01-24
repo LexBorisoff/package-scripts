@@ -13,6 +13,7 @@ export enum SelectPmReason {
 
 /**
  * @param reason reason to select a package manager
+ * @param command initial package manager command
  */
 export async function selectPackageManager(
   reason: SelectPmReason,
@@ -27,7 +28,7 @@ export async function selectPackageManager(
     logger.error(`! ${chalk.underline(command)} is not valid\n`);
   }
 
-  const { packageManager } = await $_.autocomplete({
+  const { packageManager } = await $_.select({
     name: 'packageManager',
     message:
       reason === SelectPmReason.InitializeApp
