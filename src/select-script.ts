@@ -4,7 +4,7 @@ import { args } from './utils/args.js';
 import { getArgs } from './utils/get-args.js';
 import { getPackageJson } from './utils/get-package-json.js';
 
-const { select } = args;
+const { first, select } = args;
 const { commandArgs: _ } = getArgs();
 
 function getMatchFn(script: string) {
@@ -63,9 +63,12 @@ export async function selectScript(): Promise<string | undefined> {
     throw new Error('No matching scripts');
   }
 
-  // a single script was matched
+  if (first) {
+    return matchedScripts.at(0)?.value;
+  }
+
   if (!select) {
-    // an exact script name was matched
+    // find an exact script name match
     if (_.length === 1) {
       const [matchValue] = _;
       const exactMatch = matchedScripts.find(
@@ -77,9 +80,9 @@ export async function selectScript(): Promise<string | undefined> {
       }
     }
 
+    // a single script name was matched
     if (matchedScripts.length === 1) {
-      const [script] = matchedScripts;
-      return script.value;
+      return matchedScripts.at(0)?.value;
     }
   }
 
