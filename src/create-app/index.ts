@@ -30,12 +30,7 @@ import { linkDist } from './link-dist.js';
       await initializeApp();
       linkDist();
       createScriptFiles(command);
-
-      updateConfig({
-        command,
-        packageManager,
-        ignorePackageManagerProp: false,
-      });
+      updateConfig({ command, packageManager });
     }
   }
 })();

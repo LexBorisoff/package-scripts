@@ -1,22 +1,12 @@
-import type {
-  PackageManagerChoice,
-  PackageManagerInterface,
-} from '../../types/package-manager.types.js';
+import { defaultManagers } from '../default-managers.js';
 
-export const NEW_PM_OPTION = 'NEW_PACKAGE_MANAGER';
+import type { PackageManagerChoice } from '../../types/package-manager.types.js';
 
-export function getPmChoices(
-  managers: Record<string, PackageManagerInterface>,
-  addNewOption: boolean = true,
-): PackageManagerChoice[] {
-  const choices = Object.values(managers).map(({ command }) => ({
+export function getPmChoices(): PackageManagerChoice[] {
+  const choices = Object.values(defaultManagers).map(({ command }) => ({
     title: command,
     value: command,
   }));
-
-  if (addNewOption) {
-    choices.push({ title: '[Add New Package Manager]', value: NEW_PM_OPTION });
-  }
 
   return choices;
 }

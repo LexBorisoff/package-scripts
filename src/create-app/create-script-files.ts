@@ -9,14 +9,15 @@ import { bashScript, powershellScript } from './script-contents.js';
 
 export function createScriptFiles(command: string): void {
   const binDir = useCoreHooks((root) => root.bin);
-  const { bash, powershell } = getScriptNames(command);
+  const scriptNames = getScriptNames(command);
+  const { bash, powershell } = scriptNames;
 
   // delete files that are not named based on the command
   const binFiles = fs.readdirSync(binDir.getPath());
   binFiles
     .filter((file) => {
       const filePath = path.resolve(binDir.getPath(), file);
-      const isCommandFile = file === bash || file === powershell;
+      const isCommandFile = Object.values(scriptNames).includes(file);
       return fs.statSync(filePath).isFile() && !isCommandFile;
     })
     .forEach((file) => {

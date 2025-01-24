@@ -1,26 +1,29 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+import { getConfigData } from '../config/get-config-data.js';
+
 export const args = yargs(hideBin(process.argv))
-  .usage('scripts [<filter args>] [--verbose | -v]')
-  .usage('scripts <option>')
+  .scriptName(getConfigData().command)
+  .usage(`Usage: $0 [OPTION]... [ARG]...`)
+  .usage(`Interactively select and run a package script`)
+  .option('select', {
+    alias: 's',
+    type: 'boolean',
+    description: 'Select a script even if exactly matched',
+  })
   .option('use', {
     type: 'string',
-    description: 'Set the default package manager',
+    description: 'Set a package manager (default / current run)',
+    alias: 'u',
   })
-  .option('remove', {
-    type: 'string',
-    description: 'Remove a package manager from the list',
-  })
-  .option('ignore', {
+  .option('manager', {
     type: 'boolean',
-    description: 'Ignore "packageManager" property in package.json',
-  })
-  .option('verbose', {
-    type: 'boolean',
-    alias: 'v',
-    hidden: true,
+    description: 'Show which package manager is currently used',
+    alias: 'm',
   })
   .help()
   .version()
+  .hide('help')
+  .hide('version')
   .parseSync();
