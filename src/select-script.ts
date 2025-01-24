@@ -2,9 +2,10 @@ import $_ from '@lexjs/prompts';
 
 import { args } from './utils/args.js';
 import { getPackageJson } from './utils/get-package-json.js';
+import { parseArguments } from './utils/parse-arguments.js';
 
-const { _, select } = args;
-const match = _.map((arg) => arg.toString());
+const { select } = args;
+const { commandArgs: _ } = parseArguments();
 
 function getMatchFn(script: string) {
   return (value: string) => script.toLowerCase().includes(value.toLowerCase());
@@ -55,7 +56,7 @@ export async function selectScript(): Promise<string | undefined> {
     }));
 
   const matchedScripts = packageScripts.filter(
-    ({ value }) => match.length === 0 || match.every(getMatchFn(value)),
+    ({ value }) => _.length === 0 || _.every(getMatchFn(value)),
   );
 
   if (matchedScripts.length === 0) {
@@ -65,8 +66,8 @@ export async function selectScript(): Promise<string | undefined> {
   // a single script was matched
   if (!select) {
     // an exact script name was matched
-    if (match.length === 1) {
-      const [matchValue] = match;
+    if (_.length === 1) {
+      const [matchValue] = _;
       const exactMatch = matchedScripts.find(
         ({ value }) => value === matchValue,
       )?.value;
@@ -88,9 +89,9 @@ export async function selectScript(): Promise<string | undefined> {
     message: 'Type to find a script',
     suggest(input: string | number, list) {
       const inputStr = `${input}`;
-      const inputArray = inputStr.length === 0 ? match : inputStr.split(/\s+/);
+      const inputArr = inputStr.length === 0 ? _ : inputStr.split(/\s+/);
       return Promise.resolve(
-        list.filter(({ title }) => inputArray.every(getMatchFn(title))),
+        list.filter(({ title }) => inputArr.every(getMatchFn(title))),
       );
     },
     choices: packageScripts,

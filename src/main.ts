@@ -27,6 +27,7 @@ const { _, use, manager } = args;
 
     if (script != null) {
       updateTmp.script(script);
+      updateTmp.scriptArguments();
       updateTmp.packageManager();
     }
   } catch (error) {

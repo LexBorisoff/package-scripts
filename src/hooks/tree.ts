@@ -7,6 +7,7 @@ export const initialTree = {
   lib: {},
   tmp: {
     script: '',
+    arguments: '',
     'package-manager': '',
   },
 } satisfies TreeInterface;

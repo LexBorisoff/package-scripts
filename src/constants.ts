@@ -47,6 +47,10 @@ class Paths {
     return path.resolve(this.TMP_DIR, 'script');
   }
 
+  get ARGUMENTS_FILE(): string {
+    return path.resolve(this.TMP_DIR, 'arguments');
+  }
+
   get PACKAGE_MANAGER_FILE(): string {
     return path.resolve(this.TMP_DIR, 'package-manager');
   }
