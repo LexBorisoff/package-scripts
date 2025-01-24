@@ -1,13 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { PackageJsonError } from '../errors/package-json.error.js';
+
 import type { PackageJson } from 'type-fest';
 
 export function getPackageJson(): PackageJson {
   const packageJson = path.resolve(process.cwd(), 'package.json');
 
   if (!fs.existsSync(packageJson)) {
-    throw new Error('package.json does not exist in current directory');
+    throw new PackageJsonError(
+      'package.json does not exist in current directory',
+    );
   }
 
   try {
