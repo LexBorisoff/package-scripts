@@ -3,8 +3,9 @@ import $_ from '@lexjs/prompts';
 import { args } from './utils/args.js';
 import { getArgs } from './utils/get-args.js';
 import { getPackageJson } from './utils/get-package-json.js';
+import { logger } from './utils/logger.js';
 
-const { select } = args;
+const { first, select } = args;
 const { commandArgs: _ } = getArgs();
 
 function getMatchFn(script: string) {
@@ -59,13 +60,12 @@ export async function selectScript(): Promise<string | undefined> {
     ({ value }) => _.length === 0 || _.every(getMatchFn(value)),
   );
 
-  if (matchedScripts.length === 0) {
-    throw new Error('No matching scripts');
+  if (first) {
+    return matchedScripts.at(0)?.value;
   }
 
-  // a single script was matched
   if (!select) {
-    // an exact script name was matched
+    // find an exact script name match
     if (_.length === 1) {
       const [matchValue] = _;
       const exactMatch = matchedScripts.find(
@@ -77,29 +77,50 @@ export async function selectScript(): Promise<string | undefined> {
       }
     }
 
+    // a single script name was matched
     if (matchedScripts.length === 1) {
-      const [script] = matchedScripts;
-      return script.value;
+      return matchedScripts.at(0)?.value;
     }
   }
+
+  if (matchedScripts.length === 0) {
+    logger.warn('! No matching scripts\n');
+  }
+
+  let state = { aborted: false, exited: false };
 
   // an array of scripts was matched
   const { script } = await $_.autocomplete({
     name: 'script',
     message: 'Type to find a script',
+    choices: packageScripts,
     suggest(input: string | number, list) {
       const inputStr = `${input}`;
-      const inputArr = inputStr.length === 0 ? _ : inputStr.split(/\s+/);
+
+      // construct array of input words to filter scripts by
+      let inputArr: string[] = [];
+      if (inputStr.length === 0) {
+        // if no matched scripts, use empty array to show all scripts
+        // otherwise, use command arguments
+        inputArr = matchedScripts.length === 0 ? [] : _;
+      } else {
+        // split user input into words
+        inputArr = inputStr.split(/\s+/);
+      }
+
       return Promise.resolve(
         list.filter(({ title }) => inputArr.every(getMatchFn(title))),
       );
     },
-    choices: packageScripts,
+    onState(props) {
+      state = props;
+    },
   });
 
-  if (script != null) {
-    return script;
+  // incorrect choice value was submitted
+  if (script == null && !state.aborted && !state.exited) {
+    throw new Error('! Invalid script name');
   }
 
-  return undefined;
+  return script;
 }

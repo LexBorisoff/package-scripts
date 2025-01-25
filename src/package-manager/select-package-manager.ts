@@ -13,6 +13,7 @@ export enum SelectPmEnum {
 
 /**
  * @param reason reason to select a package manager
+ * @param command initial package manager command
  */
 export async function selectPackageManager(
   reason: SelectPmEnum,
@@ -27,7 +28,7 @@ export async function selectPackageManager(
     logger.error(`! ${chalk.underline(command)} is not valid\n`);
   }
 
-  const { packageManager } = await $_.autocomplete({
+  const { packageManager } = await $_.select({
     name: 'packageManager',
     message:
       reason === SelectPmEnum.DefaultPm
