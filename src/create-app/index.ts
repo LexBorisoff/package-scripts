@@ -93,8 +93,8 @@ function isEmpty(str: string | undefined): str is undefined | '' {
 
   if (packageManager != null) {
     await initializeApp();
+    await createScriptFiles(command);
     linkDist();
-    createScriptFiles(command);
     updateConfig({ command, packageManager });
   }
 })();
