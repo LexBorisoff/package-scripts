@@ -3,16 +3,35 @@ import { hideBin } from 'yargs/helpers';
 
 import { getConfigData } from '../config/get-config-data.js';
 
-const group = {
-  script: 'Script Options:',
-  packageManager: 'Package Manager Options:',
-};
-
 const desc = {
   runWith(packageManager: string): string {
     return `Run a script using ${packageManager}`;
   },
 };
+
+const group = {
+  script: 'Script Options:',
+  packageManager: 'Package Manager Options:',
+};
+
+const options = [
+  'npm',
+  'pnpm',
+  'yarn',
+  'bun',
+  'select',
+  'first',
+  'default',
+  'which',
+] as const;
+
+type Option = (typeof options)[number];
+
+function noConflict(itself: Option, ...other: Option[]): Option[] {
+  return options.filter(
+    (option) => option !== itself && !other.includes(option),
+  );
+}
 
 const parsed = yargs(hideBin(process.argv))
   .scriptName(getConfigData().command)
@@ -23,28 +42,28 @@ const parsed = yargs(hideBin(process.argv))
     description: desc.runWith('npm'),
     alias: 'n',
     group: group.script,
-    conflicts: ['pnpm', 'yarn', 'bun', 'default', 'which'],
+    conflicts: noConflict('npm', 'select'),
   })
   .option('pnpm', {
     type: 'boolean',
     description: desc.runWith('pnpm'),
     alias: 'p',
     group: group.script,
-    conflicts: ['npm', 'yarn', 'bun', 'default', 'which'],
+    conflicts: noConflict('pnpm', 'select'),
   })
   .option('yarn', {
     type: 'boolean',
     description: desc.runWith('yarn'),
     group: group.script,
     alias: 'y',
-    conflicts: ['npm', 'pnpm', 'bun', 'default', 'which'],
+    conflicts: noConflict('yarn', 'select'),
   })
   .option('bun', {
     type: 'boolean',
     description: desc.runWith('bun'),
     group: group.script,
     alias: 'b',
-    conflicts: ['npm', 'pnpm', 'yarn', 'default', 'which'],
+    conflicts: noConflict('bun', 'select'),
   })
   .option('select', {
     type: 'boolean',
@@ -65,14 +84,14 @@ const parsed = yargs(hideBin(process.argv))
     description: 'Set the default package manager',
     alias: 'd',
     group: group.packageManager,
-    conflicts: ['select', 'first', 'npm', 'pnpm', 'yarn', 'bun', 'which'],
+    conflicts: noConflict('default'),
   })
   .option('which', {
     type: 'boolean',
     description: 'Show which package which is currently used',
     alias: 'w',
     group: group.packageManager,
-    conflicts: ['select', 'first', 'npm', 'pnpm', 'yarn', 'bun', 'default'],
+    conflicts: noConflict('which'),
   })
   .help()
   .version()
