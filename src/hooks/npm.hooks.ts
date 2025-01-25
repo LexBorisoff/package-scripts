@@ -19,9 +19,9 @@ const dirHooks = FsHooks.dirHooks((targetDir) => ({
       if (error instanceof Error || error instanceof ExecaError) {
         logger.error(error.message);
       }
-
-      process.chdir(currentDir);
     }
+
+    process.chdir(currentDir);
   },
   async [npmCommands.link](deps: string[]) {
     const currentDir = process.cwd();
@@ -33,9 +33,9 @@ const dirHooks = FsHooks.dirHooks((targetDir) => ({
       if (error instanceof Error || error instanceof ExecaError) {
         logger.error(error.message);
       }
-
-      process.chdir(currentDir);
     }
+
+    process.chdir(currentDir);
   },
 }));
 
