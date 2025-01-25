@@ -14,7 +14,7 @@ export function resetConfig(key: keyof ConfigInterface): void {
 
   const configFile = useCoreHooks((root) => root['config.json']);
   const configData = configFile.read();
-  const config = parseData<ConfigInterface>(configData);
+  const config = parseData<ConfigInterface>(configData) ?? fallbackConfig;
 
   configFile.write(JSON.stringify({ ...config, [key]: fallbackConfig[key] }));
 }
