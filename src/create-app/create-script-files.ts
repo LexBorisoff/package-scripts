@@ -1,13 +1,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { FsHooks } from 'fs-hooks';
+
 import { IS_WINDOWS } from '../constants.js';
+import { permissionsHooks } from '../hooks/permissions.hooks.js';
+import { tree } from '../hooks/tree.js';
 import { useCoreHooks } from '../hooks/use-core-hooks.js';
+import { paths } from '../paths.js';
 
 import { getScriptNames } from './get-script-names.js';
 import { bashScript, powershellScript } from './script-contents.js';
 
-export function createScriptFiles(command: string): void {
+export async function createScriptFiles(command: string): Promise<void> {
   const binDir = useCoreHooks((root) => root.bin);
   const scriptNames = getScriptNames(command);
   const { bash, powershell } = scriptNames;
@@ -24,9 +29,16 @@ export function createScriptFiles(command: string): void {
       binDir.fileDelete(file);
     });
 
+  const fsHooks = new FsHooks(paths.root, tree);
+  const usePermissions = fsHooks.useHooks(permissionsHooks);
+  const binPermissions = usePermissions(({ bin }) => bin);
+
   // create scripts files
   binDir.fileCreate(bash, bashScript);
+  await binPermissions.x(bash);
+
   if (IS_WINDOWS) {
     binDir.fileCreate(powershell, powershellScript);
+    await binPermissions.x(powershell);
   }
 }
