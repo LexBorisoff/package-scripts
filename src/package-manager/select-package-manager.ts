@@ -6,16 +6,16 @@ import { logger } from '../utils/logger.js';
 
 import { getPmChoices } from './utils/get-pm-choices.js';
 
-export enum SelectPmReason {
-  InitializeApp = 'initialize-app',
-  Update = 'update',
+export enum SelectPmEnum {
+  DefaultPm = 'default',
+  SelectPm = 'select',
 }
 
 /**
  * @param reason reason to select a package manager
  */
 export async function selectPackageManager(
-  reason: SelectPmReason,
+  reason: SelectPmEnum,
   command?: string,
 ): Promise<string | undefined> {
   // command matches a manager from config
@@ -30,7 +30,7 @@ export async function selectPackageManager(
   const { packageManager } = await $_.autocomplete({
     name: 'packageManager',
     message:
-      reason === SelectPmReason.InitializeApp
+      reason === SelectPmEnum.DefaultPm
         ? 'What is your default package manager?'
         : 'Select a package manager',
     choices: getPmChoices(),

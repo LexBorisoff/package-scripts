@@ -5,11 +5,16 @@ import chalk from 'chalk';
 import 'dotenv/config';
 
 import { updateConfig } from '../config/update-config.js';
-import { CONFIG_FILE, INITIAL_COMMAND, PACKAGE_NAME } from '../constants.js';
+import {
+  CONFIG_FILE,
+  INITIAL_COMMAND,
+  PACKAGE_MANAGERS,
+  PACKAGE_NAME,
+} from '../constants.js';
 import { useCoreHooks } from '../hooks/use-core-hooks.js';
 import {
   selectPackageManager,
-  SelectPmReason,
+  SelectPmEnum,
 } from '../package-manager/select-package-manager.js';
 import { logger } from '../utils/logger.js';
 import { parseData } from '../utils/parse-data.js';
@@ -74,8 +79,12 @@ function isEmpty(str: string | undefined): str is undefined | '' {
     command = result.command;
   }
 
-  if (isEmpty(packageManager)) {
-    packageManager = await selectPackageManager(SelectPmReason.InitializeApp);
+  if (
+    isEmpty(packageManager) ||
+    typeof packageManager !== 'string' ||
+    !PACKAGE_MANAGERS.includes(packageManager)
+  ) {
+    packageManager = await selectPackageManager(SelectPmEnum.DefaultPm);
 
     if (packageManager == null) {
       return;

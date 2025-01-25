@@ -3,11 +3,11 @@ import { logger } from '../utils/logger.js';
 
 import {
   selectPackageManager,
-  SelectPmReason,
+  SelectPmEnum,
 } from './select-package-manager.js';
 
 export async function defaultPackageManager(arg: string): Promise<void> {
-  const packageManager = await selectPackageManager(SelectPmReason.Update, arg);
+  const packageManager = await selectPackageManager(SelectPmEnum.SelectPm, arg);
 
   if (packageManager == null) {
     return;
