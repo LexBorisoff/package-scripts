@@ -197,7 +197,7 @@ The CLI allows you to run scripts by using one of the following package managers
 - yarn
 - bun
 
-> 💡 Use the `--which` option to view which package manager is current being used.
+> 💡 Use the `--which` option to view which package manager is currently being used.
 
 ### Default package manager
 
@@ -211,7 +211,7 @@ scripts --default pnpm
 
 ### Project's package manager
 
-Some projects include a `packageManager` property in their `package.json`. The CLI honors it and will run scripts by using this property instead of your default package manager.
+Some projects include a `packageManager` property in their `package.json`. The CLI honors it and will run scripts using this property instead of your default package manager.
 
 You can override this behavior by supplying the package manager that you want to use as a _**flag**_. It will be applied for the _**current script run**_ only and not override the project's package manager completely.
 
