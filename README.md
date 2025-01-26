@@ -95,7 +95,7 @@ scripts
 }
 ```
 
-<img src="https://github.com/LexBorisoff/package-scripts/blob/readme/media/usage.gif?raw=true" alt="usage example" width="1000" />
+<img src="https://github.com/LexBorisoff/package-scripts/blob/main/media/usage.gif?raw=true" alt="usage example" width="1000" />
 
 ### Arguments
 
@@ -144,6 +144,8 @@ scripts build check
 
 If there are multiple matched scripts, the `--first` option can be used to run the first script without displaying the selection prompt.
 
+For example:
+
 ```json
 {
   "scripts": {
@@ -180,11 +182,11 @@ For example:
 scripts hello -- world
 ```
 
-<img src="https://github.com/LexBorisoff/package-scripts/blob/readme/media/hello-world-1.gif?raw=true" alt="usage example" width="1000" />
+<img src="https://github.com/LexBorisoff/package-scripts/blob/main/media/hello-world-1.gif?raw=true" alt="usage example" width="1000" />
 
 Passing arguments to the script also works with the selection prompt:
 
-<img src="https://github.com/LexBorisoff/package-scripts/blob/readme/media/hello-world-2.gif?raw=true" alt="usage example" width="1000" />
+<img src="https://github.com/LexBorisoff/package-scripts/blob/main/media/hello-world-2.gif?raw=true" alt="usage example" width="1000" />
 
 ## Package Manager
 
@@ -197,10 +199,12 @@ The CLI allows you to run scripts by using one of the following package managers
 
 ### Default package manager
 
-To set the default package manager for all projects, provide the `--default` option with an optional package manager name. If no name is provided, you will be prompted to select one.
+To set the default package manager for all projects, provide the `--default` option with a package manager name. If no name is provided, you will be prompted to select one.
+
+For example:
 
 ```bash
-scripts --default [PACKAGE_MANAGER]
+scripts --default pnpm
 ```
 
 ### Project's package manager
