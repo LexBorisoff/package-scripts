@@ -197,6 +197,8 @@ The CLI allows you to run scripts by using one of the following package managers
 - yarn
 - bun
 
+> 💡 Use the `--which` option to view which package manager is current being used.
+
 ### Default package manager
 
 To set the default package manager for all projects, provide the `--default` option with a package manager name. If no name is provided, you will be prompted to select one.
