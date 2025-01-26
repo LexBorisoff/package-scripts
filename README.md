@@ -17,15 +17,15 @@ CLI to interactively select and run package scripts using any package manager.
 
 ## Installation
 
-1. Run the following command using **_npx_** from any directory.
+**Step 1**. Run the following command using **_npx_** from any directory.
 
 ```bash
 npx package-scripts
 ```
 
-2. Follow the prompts to set up the command name and select your default package manager.
+**Step 2**. Follow the prompts to set up the command name and select your default package manager.
 
-3. Once the installation process is complete, add the following lines to your shell configuration file.
+**Step 3**. Once the installation process is complete, add the following lines to your shell configuration file.
 
 - For POSIX-compatible shells like bash or zsh
 
@@ -49,7 +49,7 @@ if (Test-Path -Path "$env:HOMEPATH\.package-scripts\bin") {
 
 > 💡 To get the path of your PowerShell configuration file, type `$PROFILE.` and tab through the available options to choose the necessary profile.
 
-4. Restart your shell. The command should now be available.
+**Step 4**. Restart your shell. The command should now be available.
 
 ### How it works
 
