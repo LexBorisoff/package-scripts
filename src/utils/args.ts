@@ -2,6 +2,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { getConfigData } from '../config/get-config-data.js';
+import { PACKAGE_VERSION } from '../constants.js';
 
 const desc = {
   runWith(packageManager: string): string {
@@ -102,7 +103,7 @@ const parsed = yargs(hideBin(process.argv))
     conflicts: noConflict('rename'),
   })
   .help()
-  .version()
+  .version(PACKAGE_VERSION)
   .hide('help')
   .hide('version')
   .parserConfiguration({
