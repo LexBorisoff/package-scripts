@@ -5,12 +5,7 @@ import chalk from 'chalk';
 import 'dotenv/config';
 
 import { updateConfig } from '../config/update-config.js';
-import {
-  CONFIG_FILE,
-  INITIAL_COMMAND,
-  PACKAGE_MANAGERS,
-  PACKAGE_NAME,
-} from '../constants.js';
+import { CONFIG_FILE, PACKAGE_MANAGERS, PACKAGE_NAME } from '../constants.js';
 import { useCoreHooks } from '../hooks/use-core-hooks.js';
 import {
   selectPackageManager,
@@ -20,6 +15,7 @@ import { logger } from '../utils/logger.js';
 import { parseData } from '../utils/parse-data.js';
 
 import { createScriptFiles } from './create-script-files.js';
+import { getCommandName } from './get-command-name.js';
 import { initializeApp } from './initialize-app.js';
 import { linkDist } from './link-dist.js';
 
@@ -66,17 +62,13 @@ function isEmpty(str: string | undefined): str is undefined | '' {
   }
 
   if (isEmpty(command) || renameCommand) {
-    const result = await $_.text({
-      name: 'command',
-      message: 'What should be the command name?',
-      initial: INITIAL_COMMAND,
-    });
+    const result = await getCommandName();
 
-    if (result.command == null) {
+    if (result == null) {
       return;
     }
 
-    command = result.command;
+    command = result;
   }
 
   if (

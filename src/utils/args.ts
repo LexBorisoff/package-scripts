@@ -12,6 +12,7 @@ const desc = {
 const group = {
   script: 'Script Options:',
   packageManager: 'Package Manager Options:',
+  config: 'Config Options:',
 };
 
 const options = [
@@ -23,6 +24,7 @@ const options = [
   'first',
   'default',
   'which',
+  'rename',
 ] as const;
 
 type Option = (typeof options)[number];
@@ -35,7 +37,7 @@ function noConflict(itself: Option, ...other: Option[]): Option[] {
 
 const parsed = yargs(hideBin(process.argv))
   .scriptName(getConfigData().command)
-  .usage(`Usage: $0 [OPTION]... [ARG]...`)
+  .usage(`Usage: $0 [ARG...] [OPTION...]`)
   .usage(`Interactively select and run scripts using any package manager`)
   .option('npm', {
     type: 'boolean',
@@ -92,6 +94,12 @@ const parsed = yargs(hideBin(process.argv))
     alias: 'w',
     group: group.packageManager,
     conflicts: noConflict('which'),
+  })
+  .option('rename', {
+    type: 'string',
+    description: 'Rename the command',
+    group: group.config,
+    conflicts: noConflict('rename'),
   })
   .help()
   .version()

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { renameCommand } from './create-app/rename-command.js';
 import {
   currentPackageManager,
   defaultPackageManager,
@@ -11,13 +12,18 @@ import { logger } from './utils/logger.js';
 
 (async function main() {
   try {
+    if (args.which) {
+      currentPackageManager();
+      return;
+    }
+
     if (args.default != null) {
       await defaultPackageManager(args.default);
       return;
     }
 
-    if (args.which) {
-      currentPackageManager();
+    if (args.rename != null) {
+      await renameCommand(args.rename);
       return;
     }
 
