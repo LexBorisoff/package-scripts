@@ -62,13 +62,13 @@ function isEmpty(str: string | undefined): str is undefined | '' {
   }
 
   if (isEmpty(command) || renameCommand) {
-    const result = await getCommandName();
+    const commandName = await getCommandName();
 
-    if (result == null) {
+    if (commandName == null) {
       return;
     }
 
-    command = result;
+    command = commandName;
   }
 
   if (
