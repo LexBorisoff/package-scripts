@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { args } from './args.js';
 import { renameCommand } from './create-app/rename-command.js';
 import {
   currentPackageManager,
@@ -7,7 +8,6 @@ import {
 } from './package-manager/index.js';
 import { selectScript } from './select-script.js';
 import { updateTmp } from './update-tmp.js';
-import { args } from './utils/args.js';
 import { logger } from './utils/logger.js';
 
 (async function main() {

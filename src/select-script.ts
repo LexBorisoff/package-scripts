@@ -1,6 +1,6 @@
 import $_ from '@lexjs/prompts';
 
-import { args } from './utils/args.js';
+import { args } from './args.js';
 import { getArgs } from './utils/get-args.js';
 import { getPackageJson } from './utils/get-package-json.js';
 import { logger } from './utils/logger.js';
