@@ -1,8 +1,8 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { getConfigData } from '../config/get-config-data.js';
-import { PACKAGE_VERSION } from '../constants.js';
+import { getConfigData } from './config/get-config-data.js';
+import { PACKAGE_VERSION } from './constants.js';
 
 const desc = {
   runWith(packageManager: string): string {
@@ -16,22 +16,20 @@ const group = {
   config: 'Config Options:',
 };
 
-const options = [
-  'npm',
-  'pnpm',
-  'yarn',
-  'bun',
-  'select',
-  'first',
-  'default',
-  'which',
-  'rename',
-] as const;
-
-type Option = (typeof options)[number];
+enum Option {
+  Npm = 'npm',
+  Pnpm = 'pnpm',
+  Yarn = 'yarn',
+  Bun = 'bun',
+  Select = 'select',
+  First = 'first',
+  Default = 'default',
+  Which = 'which',
+  Rename = 'rename',
+}
 
 function noConflict(itself: Option, ...other: Option[]): Option[] {
-  return options.filter(
+  return Object.values(Option).filter(
     (option) => option !== itself && !other.includes(option),
   );
 }
@@ -45,28 +43,28 @@ const parsed = yargs(hideBin(process.argv))
     description: desc.runWith('npm'),
     alias: 'n',
     group: group.script,
-    conflicts: noConflict('npm', 'select'),
+    conflicts: noConflict(Option.Npm, Option.Select),
   })
   .option('pnpm', {
     type: 'boolean',
     description: desc.runWith('pnpm'),
     alias: 'p',
     group: group.script,
-    conflicts: noConflict('pnpm', 'select'),
+    conflicts: noConflict(Option.Pnpm, Option.Select),
   })
   .option('yarn', {
     type: 'boolean',
     description: desc.runWith('yarn'),
     group: group.script,
     alias: 'y',
-    conflicts: noConflict('yarn', 'select'),
+    conflicts: noConflict(Option.Yarn, Option.Select),
   })
   .option('bun', {
     type: 'boolean',
     description: desc.runWith('bun'),
     group: group.script,
     alias: 'b',
-    conflicts: noConflict('bun', 'select'),
+    conflicts: noConflict(Option.Bun, Option.Select),
   })
   .option('select', {
     type: 'boolean',
@@ -87,20 +85,20 @@ const parsed = yargs(hideBin(process.argv))
     description: 'Set the default package manager',
     alias: 'd',
     group: group.packageManager,
-    conflicts: noConflict('default'),
+    conflicts: noConflict(Option.Default),
   })
   .option('which', {
     type: 'boolean',
     description: 'Show which package which is currently used',
     alias: 'w',
     group: group.packageManager,
-    conflicts: noConflict('which'),
+    conflicts: noConflict(Option.Which),
   })
   .option('rename', {
     type: 'string',
     description: 'Rename the command',
     group: group.config,
-    conflicts: noConflict('rename'),
+    conflicts: noConflict(Option.Rename),
   })
   .help()
   .version(PACKAGE_VERSION)
