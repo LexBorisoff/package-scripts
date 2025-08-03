@@ -1,7 +1,7 @@
+import { args } from './args.js';
 import { getConfigData } from './config/get-config-data.js';
 import { useCoreHooks } from './hooks/use-core-hooks.js';
 import { getProjectPm } from './package-manager/utils/get-project-pm.js';
-import { args } from './utils/args.js';
 import { getArgs } from './utils/get-args.js';
 
 const { passThroughArgs } = getArgs();
