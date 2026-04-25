@@ -5,7 +5,7 @@ import { getArgs } from './utils/get-args.js';
 import { getPackageJson } from './utils/get-package-json.js';
 import { logger } from './utils/logger.js';
 
-const { first, select } = args;
+const { first, interactive } = args;
 const { commandArgs: _ } = getArgs();
 
 function getMatchFn(script: string) {
@@ -64,7 +64,7 @@ export async function selectScript(): Promise<string | undefined> {
     return matchedScripts.at(0)?.value;
   }
 
-  if (!select) {
+  if (!interactive) {
     // find an exact script name match
     if (_.length === 1) {
       const [matchValue] = _;

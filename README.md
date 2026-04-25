@@ -3,7 +3,7 @@
 ![Build](https://img.shields.io/github/actions/workflow/status/LexBorisoff/package-scripts/release.yml)
 ![NPM Version](https://img.shields.io/npm/v/package-scripts)
 
-CLI to interactively select and run package scripts using any package manager.
+CLI to interactively select and run package scripts using a package manager of your choice.
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -114,7 +114,7 @@ There are cases when the CLI will run a matched script without displaying the se
 - When a single argument is provided that matches a script **_exactly_** even if there are other scripts containing that argument in their names.
 - When a single script is matched based on the provided arguments.
 
-> 💡 The `--select` option can override this behavior and force the display of the selection menu.
+> 💡 The `--interactive` option can override this behavior and show the interactive selection menu.
 
 For example:
 
