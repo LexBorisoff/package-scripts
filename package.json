@@ -52,7 +52,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@lexjs/prompts": "^1.1.6",
+    "@lexjs/prompts": "^1.2.0",
     "chalk": "^4.1.2",
     "dotenv": "^16.4.7",
     "execa": "^9.5.2",
