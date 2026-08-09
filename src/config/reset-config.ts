@@ -1,5 +1,5 @@
 import { CONFIG_FILE } from '../constants.js';
-import { useCoreHooks } from '../hooks/use-core-hooks.js';
+import { useCoreHooks } from '../hooks/core.hooks.js';
 import { parseData } from '../utils/parse-data.js';
 
 import { fallbackConfig } from './fallback-config.js';

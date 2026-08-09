@@ -14,7 +14,7 @@ const dirHooks = FsHooks.dirHooks((targetDir) => ({
     process.chdir(targetDir.path);
 
     try {
-      await $`npm i ${deps.join(' ')}`;
+      await $`npm install ${deps.join(' ')}`;
     } catch (error) {
       if (error instanceof Error || error instanceof ExecaError) {
         logger.error(error.message);
