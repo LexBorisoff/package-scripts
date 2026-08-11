@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 import { updateConfig } from '../config/update-config.js';
 import { CONFIG_FILE, PACKAGE_MANAGERS, PACKAGE_NAME } from '../constants.js';
-import { useCoreHooks } from '../hooks/use-core-hooks.js';
+import { useCoreHooks } from '../hooks/core.hooks.js';
 import {
   selectPackageManager,
   SelectPmEnum,
@@ -31,9 +31,8 @@ function isEmpty(str: string | undefined): str is undefined | '' {
 
   // get current config data if exists
   const rootDir = useCoreHooks((root) => root);
-  const configExists = rootDir.exists(CONFIG_FILE);
 
-  if (configExists) {
+  if (rootDir.exists(CONFIG_FILE)) {
     const configData = rootDir.fileRead(CONFIG_FILE);
 
     if (configData != null) {
@@ -54,20 +53,13 @@ function isEmpty(str: string | undefined): str is undefined | '' {
       name: 'rename',
     });
 
-    if (rename == null) {
-      return;
-    }
-
+    if (rename == null) return;
     renameCommand = rename;
   }
 
   if (isEmpty(command) || renameCommand) {
     const commandName = await getCommandName();
-
-    if (commandName == null) {
-      return;
-    }
-
+    if (commandName == null) return;
     command = commandName;
   }
 
@@ -77,10 +69,7 @@ function isEmpty(str: string | undefined): str is undefined | '' {
     !PACKAGE_MANAGERS.includes(packageManager)
   ) {
     packageManager = await selectPackageManager(SelectPmEnum.DefaultPm);
-
-    if (packageManager == null) {
-      return;
-    }
+    if (packageManager == null) return;
   }
 
   if (packageManager != null) {

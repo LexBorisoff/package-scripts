@@ -12,5 +12,6 @@ export const PACKAGE_VERSION = getProjectInfo().version!;
 
 export const INITIAL_COMMAND = 'scripts';
 export const CONFIG_FILE = 'config.json';
+export const BASH_START_FILE = 'start.sh';
 
 export const PACKAGE_MANAGERS = ['npm', 'pnpm', 'yarn', 'bun'];

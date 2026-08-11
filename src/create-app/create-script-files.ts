@@ -3,18 +3,22 @@ import path from 'node:path';
 
 import { FsHooks } from 'fs-hooks';
 
-import { IS_WINDOWS } from '../constants.js';
+import { IS_WINDOWS, BASH_START_FILE } from '../constants.js';
+import { useCoreHooks } from '../hooks/core.hooks.js';
 import { permissionsHooks } from '../hooks/permissions.hooks.js';
-import { tree } from '../hooks/tree.js';
-import { useCoreHooks } from '../hooks/use-core-hooks.js';
-import { paths } from '../paths.js';
 
-import { getScriptNames } from './get-script-names.js';
-import { bashScript, powershellScript } from './script-contents.js';
+import { paths } from './paths.js';
+import {
+  bashScript,
+  bashStartScript,
+  powershellScript,
+} from './script-contents.js';
+import { tree } from './tree.js';
 
 export async function createScriptFiles(command: string): Promise<void> {
+  const rootDir = useCoreHooks((root) => root);
   const binDir = useCoreHooks((root) => root.bin);
-  const scriptNames = getScriptNames(command);
+  const scriptNames = { bash: command, powershell: `${command}.ps1` };
   const { bash, powershell } = scriptNames;
 
   // delete files that are not named based on the command
@@ -34,6 +38,7 @@ export async function createScriptFiles(command: string): Promise<void> {
   const binPermissions = usePermissions(({ bin }) => bin);
 
   // create scripts files
+  rootDir.fileCreate(BASH_START_FILE, bashStartScript);
   binDir.fileCreate(bash, bashScript);
   await binPermissions.x(bash);
 

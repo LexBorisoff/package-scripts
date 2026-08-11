@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 
 import { IS_WINDOWS, PACKAGE_NAME } from '../constants.js';
-import { useCoreHooks } from '../hooks/use-core-hooks.js';
-import { paths } from '../paths.js';
+import { useCoreHooks } from '../hooks/core.hooks.js';
+
+import { paths } from './paths.js';
 
 export function linkDist(): void {
   const distPath = useCoreHooks(

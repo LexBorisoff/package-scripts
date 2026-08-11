@@ -3,9 +3,10 @@ import { coreHooks } from 'fs-hooks/core';
 
 import { CONFIG_FILE, IS_DEV, PACKAGE_NAME } from '../constants.js';
 import { npmCommands, npmHooks } from '../hooks/npm.hooks.js';
-import { initialTree } from '../hooks/tree.js';
-import { paths } from '../paths.js';
 import { getProjectInfo } from '../utils/get-project-info.js';
+
+import { paths } from './paths.js';
+import { initialTree } from './tree.js';
 
 export async function initializeApp(): Promise<void> {
   const fsHooks = new FsHooks(paths.root, initialTree);
@@ -19,8 +20,11 @@ export async function initializeApp(): Promise<void> {
   }
 
   // install package (link in development)
-  const version = IS_DEV ? '' : getProjectInfo().version!;
-  const pkg = version !== '' ? `${PACKAGE_NAME}@${version}` : PACKAGE_NAME;
+  const version = IS_DEV ? '' : getProjectInfo().version;
+  const pkg =
+    version != null && version !== ''
+      ? `${PACKAGE_NAME}@${version}`
+      : PACKAGE_NAME;
 
   const npmCommand = IS_DEV ? npmCommands.link : npmCommands.install;
   const useNpm = fsHooks.useHooks(npmHooks);

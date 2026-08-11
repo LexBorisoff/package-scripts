@@ -32,9 +32,7 @@ npx package-scripts
 ```bash
 # ~/.bashrc or ~/.zshrc
 
-if test -d ~/.package-scripts/bin; then
-  export PATH=~/.package-scripts/bin:$PATH
-fi
+test -f ~/.package-scripts/start.sh && . ~/.package-scripts/start.sh
 ```
 
 - For PowerShell
@@ -53,7 +51,7 @@ if (Test-Path -Path "$env:HOMEPATH\.package-scripts\bin") {
 
 ### How it works
 
-The installation process creates a `~/.package-scripts` directory where it installs the **_core library_** and creates a **_shell script_** that acts as the program's main entry point. The script's directory (`bin`) is added to your PATH, making the script accessible from anywhere in your shell. By giving the script a name that you prefer (or sticking to the default), you control how to invoke the program.
+The installation process creates a `.package-scripts` directory in the home path where it installs the **_core library_** and creates a **_shell script_** that acts as the program's main entry point. The script's directory (`bin`) is added to your PATH, making the script accessible from anywhere in your shell. By giving the script a name that you prefer (or sticking to the default), you control how to invoke the program.
 
 ### Renaming the command
 
@@ -218,7 +216,7 @@ You can override this behavior by supplying the package manager that you want to
 For example, if the project defines that it uses _**yarn**_, you can run a script with _**pnpm**_ as follows:
 
 ```bash
-scripts --pnpm [SCRIPT]
+scripts --pnpm [script]
 ```
 
 > 💡 If there is no `packageManager` property in `package.json`, you can still use this pattern to override your default package manager.
