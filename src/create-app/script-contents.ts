@@ -29,6 +29,12 @@ if test -f "${paths.main}"; then
 fi
 `;
 
+export const bashStartScript = `#!/usr/bin/env bash
+
+if test -d "${paths.bin}"; then
+	export PATH=${paths.bin}:$PATH
+fi`;
+
 export const powershellScript = `#!/usr/bin/env pwsh
 
 if (Test-Path -Path "${paths.main}") {

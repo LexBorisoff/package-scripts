@@ -20,8 +20,11 @@ export async function initializeApp(): Promise<void> {
   }
 
   // install package (link in development)
-  const version = IS_DEV ? '' : getProjectInfo().version!;
-  const pkg = version !== '' ? `${PACKAGE_NAME}@${version}` : PACKAGE_NAME;
+  const version = IS_DEV ? '' : getProjectInfo().version;
+  const pkg =
+    version != null && version !== ''
+      ? `${PACKAGE_NAME}@${version}`
+      : PACKAGE_NAME;
 
   const npmCommand = IS_DEV ? npmCommands.link : npmCommands.install;
   const useNpm = fsHooks.useHooks(npmHooks);
