@@ -1,28 +1,74 @@
 #!/usr/bin/env node
 
+import fs from 'node:fs';
+
 import $_ from '@lexjs/prompts';
-import chalk from 'chalk';
 import 'dotenv/config';
+import chalk from 'chalk';
+import { createTree, FsHooks } from 'fs-hooks';
+import { coreHooks } from 'fs-hooks/core';
 
 import { updateConfig } from '../config/update-config.js';
-import { CONFIG_FILE, PACKAGE_MANAGERS, PACKAGE_NAME } from '../constants.js';
+import {
+  CONFIG_FILE,
+  IS_DEV,
+  IS_WINDOWS,
+  PACKAGE_MANAGERS,
+  PACKAGE_NAME,
+} from '../constants.js';
 import { useCoreHooks } from '../hooks/core.hooks.js';
+import { npmCommands, npmHooks } from '../hooks/npm.hooks.js';
 import {
   selectPackageManager,
   SelectPmEnum,
 } from '../package-manager/select-package-manager.js';
+import { getProjectInfo } from '../utils/get-project-info.js';
 import { logger } from '../utils/logger.js';
 import { parseData } from '../utils/parse-data.js';
 
 import { createScriptFiles } from './create-script-files.js';
 import { getCommandName } from './get-command-name.js';
-import { initializeApp } from './initialize-app.js';
-import { linkDist } from './link-dist.js';
+import { paths } from './paths.js';
+import { initialTree } from './tree.js';
 
 import type { ConfigInterface } from '../types/config.types.js';
 
 function isEmpty(str: string | undefined): str is undefined | '' {
   return str == null || str === '';
+}
+
+function linkDist(): void {
+  const distPath = useCoreHooks(
+    ({ lib }) => lib.node_modules[PACKAGE_NAME].dist,
+  ).getPath();
+
+  if (fs.existsSync(paths.distLink)) {
+    fs.rmSync(paths.distLink, { force: true, recursive: true });
+  }
+  fs.symlinkSync(distPath, paths.distLink, IS_WINDOWS ? 'junction' : 'dir');
+}
+
+async function initializeApp(): Promise<void> {
+  const fsHooks = new FsHooks(paths.root, initialTree);
+  createTree(fsHooks);
+
+  // create config file
+  const useCore = fsHooks.useHooks(coreHooks);
+  const rootDir = useCore((root) => root);
+  if (!rootDir.exists(CONFIG_FILE)) {
+    rootDir.fileCreate(CONFIG_FILE, '');
+  }
+
+  // install package (link in development)
+  const version = IS_DEV ? '' : getProjectInfo().version;
+  const pkg =
+    version != null && version !== ''
+      ? `${PACKAGE_NAME}@${version}`
+      : PACKAGE_NAME;
+
+  const npmCommand = IS_DEV ? npmCommands.link : npmCommands.install;
+  const useNpm = fsHooks.useHooks(npmHooks);
+  await useNpm(({ lib }) => lib)[npmCommand]([pkg]);
 }
 
 (async function createApp(): Promise<void> {
