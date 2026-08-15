@@ -1,5 +1,5 @@
 {
-  "name": "package-scripts",
+  "name": "@lexjs/run",
   "version": "0.0.0-semantically-released",
   "description": "CLI to interactively select and run package scripts using any package manager",
   "type": "module",
@@ -45,11 +45,11 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LexBorisoff/package-scripts.git"
+    "url": "git+https://github.com/LexBorisoff/run-package-script.git"
   },
-  "homepage": "https://github.com/LexBorisoff/package-scripts/tree/main#readme",
+  "homepage": "https://github.com/LexBorisoff/run-package-script/tree/main#readme",
   "bugs": {
-    "url": "https://github.com/LexBorisoff/package-scripts/issues"
+    "url": "https://github.com/LexBorisoff/run-package-script/issues"
   },
   "engines": {
     "node": ">=18"

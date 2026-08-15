@@ -1,7 +1,7 @@
-# `package-scripts`
+# `@lexjs/run`
 
-![Build](https://img.shields.io/github/actions/workflow/status/LexBorisoff/package-scripts/release.yml)
-![NPM Version](https://img.shields.io/npm/v/package-scripts)
+![Build](https://img.shields.io/github/actions/workflow/status/LexBorisoff/run-package-script/release.yml)
+![NPM Version](https://img.shields.io/npm/v/@lexjs/run)
 
 CLI to interactively select and run package scripts using a package manager of your choice.
 
@@ -17,10 +17,22 @@ CLI to interactively select and run package scripts using a package manager of y
 
 ## Installation
 
-**Step 1**. Run the following command using **_npx_** from any directory.
+**Step 1**. Run one of the following commands from any directory.
 
 ```bash
-npx package-scripts
+npx @lexjs/run
+```
+
+```bash
+pnpm dlx @lexjs/run
+```
+
+```bash
+yarn dlx @lexjs/run
+```
+
+```bash
+bunx @lexjs/run
 ```
 
 **Step 2**. Follow the prompts to set up the command name and select your default package manager.
@@ -32,7 +44,7 @@ npx package-scripts
 ```bash
 # ~/.bashrc or ~/.zshrc
 
-test -f ~/.package-scripts/start.sh && . ~/.package-scripts/start.sh
+test -f ~/.lexjs/run/start.sh && . ~/.lexjs/run/start.sh
 ```
 
 - For PowerShell
@@ -40,8 +52,8 @@ test -f ~/.package-scripts/start.sh && . ~/.package-scripts/start.sh
 ```powershell
 # C:\Program Files\PowerShell\7\profile.ps1
 
-if (Test-Path -Path "$env:HOMEPATH\.package-scripts\bin") {
-  $env:Path = "$env:HOMEPATH\.package-scripts\bin;$env:Path"
+if (Test-Path -Path "$env:HOMEPATH\.lexjs\run\bin") {
+  $env:Path = "$env:HOMEPATH\.lexjs\run\bin;$env:Path"
 }
 ```
 
@@ -51,17 +63,17 @@ if (Test-Path -Path "$env:HOMEPATH\.package-scripts\bin") {
 
 ### How it works
 
-The installation process creates a `.package-scripts` directory in the home path where it installs the **_core library_** and creates a **_shell script_** that acts as the program's main entry point. The script's directory (`bin`) is added to your PATH, making the script accessible from anywhere in your shell. By giving the script a name that you prefer (or sticking to the default), you control how to invoke the program.
+The installation process creates a `~/.lexjs/run` directory where it installs the **_core library_** and creates a **_shell script_** that acts as the program's main entry point. The script's directory (`bin`) is added to your PATH, making the script accessible from anywhere in your shell. By giving the script a name that you prefer (or sticking to the default), you control how to invoke the program.
 
 ### Renaming the command
 
 You can rename the command later by providing the `--rename` option with the new command name. If the name is not provided, you will be prompted to enter one.
 
 ```bash
-scripts --rename <new-name>
+run --rename <new-name>
 ```
 
-> 📚 All following examples will assume the command name is `scripts`
+> 📚 All following examples will assume the command name is `run`
 
 ## Usage
 
@@ -70,7 +82,7 @@ To interactively select and run a script in your current project, run the comman
 For example:
 
 ```bash
-scripts
+run
 ```
 
 ```json
@@ -93,7 +105,7 @@ scripts
 }
 ```
 
-<img src="https://github.com/LexBorisoff/package-scripts/blob/main/media/usage.gif?raw=true" alt="usage example" width="1000" />
+<img src="https://github.com/LexBorisoff/run-package-script/blob/main/media/usage.gif?raw=true" alt="usage example" width="1000" />
 
 ### Arguments
 
@@ -102,7 +114,7 @@ Supplying command arguments will filter the initial list of displayed scripts. H
 For example:
 
 ```bash
-scripts arg1 arg2 ...
+run arg1 arg2 ...
 ```
 
 ### Bypassing the selection prompt
@@ -112,7 +124,7 @@ There are cases when the CLI will run a matched script without displaying the se
 - When a single argument is provided that matches a script **_exactly_** even if there are other scripts containing that argument in their names.
 - When a single script is matched based on the provided arguments.
 
-> 💡 The `--interactive` option can override this behavior and show the interactive selection menu.
+> 💡 The `--interactive` (`-i`) option can override this behavior and show the interactive selection menu.
 
 For example:
 
@@ -127,13 +139,13 @@ For example:
 ```
 
 ```bash
-scripts build
+run build
 ```
 
 > 👆 runs the `build` script (exact match)
 
 ```bash
-scripts build check
+run build check
 ```
 
 > 👆 runs the `check-build` script
@@ -155,7 +167,7 @@ For example:
 ```
 
 ```bash
-scripts check --first
+run check --first
 ```
 
 > 👆 runs the `check-style` script
@@ -177,14 +189,14 @@ For example:
 ```
 
 ```bash
-scripts hello -- world
+run hello -- world
 ```
 
-<img src="https://github.com/LexBorisoff/package-scripts/blob/main/media/hello-world-1.gif?raw=true" alt="usage example" width="1000" />
+<img src="https://github.com/LexBorisoff/run-package-script/blob/main/media/hello-world-1.gif?raw=true" alt="usage example" width="1000" />
 
 Passing arguments to the script also works with the selection prompt:
 
-<img src="https://github.com/LexBorisoff/package-scripts/blob/main/media/hello-world-2.gif?raw=true" alt="usage example" width="1000" />
+<img src="https://github.com/LexBorisoff/run-package-script/blob/main/media/hello-world-2.gif?raw=true" alt="usage example" width="1000" />
 
 ## Package Manager
 
@@ -204,7 +216,7 @@ To set the default package manager for all projects, provide the `--default` opt
 For example:
 
 ```bash
-scripts --default pnpm
+run --default pnpm
 ```
 
 ### Project's package manager
@@ -216,7 +228,7 @@ You can override this behavior by supplying the package manager that you want to
 For example, if the project defines that it uses _**yarn**_, you can run a script with _**pnpm**_ as follows:
 
 ```bash
-scripts --pnpm [script]
+run --pnpm [SCRIPT]
 ```
 
 > 💡 If there is no `packageManager` property in `package.json`, you can still use this pattern to override your default package manager.
