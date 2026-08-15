@@ -4,7 +4,7 @@ import globals from 'globals';
 import * as tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  useIgnoreFile('.gitignore', import.meta),
+  useIgnoreFile('.gitignore', import.meta, { gitignoreResolution: true }),
   lexjs.configs.recommended,
   lexjs.configs.typescript,
   {
