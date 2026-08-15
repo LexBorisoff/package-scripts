@@ -26,7 +26,7 @@
     "dist"
   ],
   "bin": {
-    "create-package-scripts": "dist/create-app/main.js"
+    "create-lexjs-run": "dist/create-app/main.js"
   },
   "keywords": [
     "package",
@@ -36,7 +36,10 @@
     "package-manager",
     "npm",
     "pnpm",
-    "yarn"
+    "yarn",
+    "bun",
+    "tools",
+    "DX"
   ],
   "author": "Lex Borisoff <lex@boriosoff.dev>",
   "license": "ISC",
@@ -52,11 +55,11 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@lexjs/filetree": "^2.0.0",
     "@lexjs/prompts": "^1.2.1",
     "chalk": "^4.1.2",
     "dotenv": "^16.4.7",
     "execa": "^9.5.2",
-    "fs-hooks": "^1.1.2",
     "type-fest": "^4.32.0",
     "yargs": "^17.7.2"
   },

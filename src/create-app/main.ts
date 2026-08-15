@@ -2,11 +2,11 @@
 
 import fs from 'node:fs';
 
+import { createTree, FileTree } from '@lexjs/filetree';
+import { coreActions } from '@lexjs/filetree/core';
 import $_ from '@lexjs/prompts';
 import 'dotenv/config';
 import chalk from 'chalk';
-import { createTree, FsHooks } from 'fs-hooks';
-import { coreHooks } from 'fs-hooks/core';
 
 import { updateConfig } from '../config/update-config.js';
 import {
@@ -16,8 +16,8 @@ import {
   PACKAGE_MANAGERS,
   PACKAGE_NAME,
 } from '../constants.js';
-import { useCoreHooks } from '../hooks/core.hooks.js';
-import { npmCommands, npmHooks } from '../hooks/npm.hooks.js';
+import { useCoreActions } from '../filetree/core-actions.js';
+import { npmCommands, npmActions } from '../filetree/npm-actions.js';
 import {
   selectPackageManager,
   SelectPmEnum,
@@ -38,7 +38,7 @@ function isEmpty(str: string | undefined): str is undefined | '' {
 }
 
 function linkDist(): void {
-  const distPath = useCoreHooks(
+  const distPath = useCoreActions(
     ({ lib }) => lib.node_modules[PACKAGE_NAME].dist,
   ).getPath();
 
@@ -48,12 +48,20 @@ function linkDist(): void {
   fs.symlinkSync(distPath, paths.distLink, IS_WINDOWS ? 'junction' : 'dir');
 }
 
+function ensureNamespace(): void {
+  const fileTree = new FileTree(paths.namespace, {});
+  if (!fs.existsSync(paths.namespace)) {
+    createTree(fileTree);
+  }
+}
+
 async function initializeApp(): Promise<void> {
-  const fsHooks = new FsHooks(paths.root, initialTree);
-  createTree(fsHooks);
+  const fileTree = new FileTree(paths.root, initialTree);
+  ensureNamespace();
+  createTree(fileTree);
 
   // create config file
-  const useCore = fsHooks.useHooks(coreHooks);
+  const useCore = fileTree.use(coreActions);
   const rootDir = useCore((root) => root);
   if (!rootDir.exists(CONFIG_FILE)) {
     rootDir.fileCreate(CONFIG_FILE, '');
@@ -67,7 +75,7 @@ async function initializeApp(): Promise<void> {
       : PACKAGE_NAME;
 
   const npmCommand = IS_DEV ? npmCommands.link : npmCommands.install;
-  const useNpm = fsHooks.useHooks(npmHooks);
+  const useNpm = fileTree.use(npmActions);
   await useNpm(({ lib }) => lib)[npmCommand]([pkg]);
 }
 
@@ -76,7 +84,7 @@ async function initializeApp(): Promise<void> {
   let packageManager: string | undefined;
 
   // get current config data if exists
-  const rootDir = useCoreHooks((root) => root);
+  const rootDir = useCoreActions((root) => root);
 
   if (rootDir.exists(CONFIG_FILE)) {
     const configData = rootDir.fileRead(CONFIG_FILE);
