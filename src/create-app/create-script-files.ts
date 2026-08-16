@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { FsHooks } from 'fs-hooks';
+import { FileTree } from '@lexjs/filetree';
 
 import { IS_WINDOWS, BASH_START_FILE } from '../constants.js';
-import { useCoreHooks } from '../hooks/core.hooks.js';
-import { permissionsHooks } from '../hooks/permissions.hooks.js';
+import { useCoreActions } from '../filetree/core-actions.js';
+import { permissionActions } from '../filetree/permission-actions.js';
 
 import { paths } from './paths.js';
 import {
@@ -16,8 +16,8 @@ import {
 import { tree } from './tree.js';
 
 export async function createScriptFiles(command: string): Promise<void> {
-  const rootDir = useCoreHooks((root) => root);
-  const binDir = useCoreHooks((root) => root.bin);
+  const rootDir = useCoreActions((root) => root);
+  const binDir = useCoreActions((root) => root.bin);
   const scriptNames = { bash: command, powershell: `${command}.ps1` };
   const { bash, powershell } = scriptNames;
 
@@ -33,8 +33,8 @@ export async function createScriptFiles(command: string): Promise<void> {
       binDir.fileDelete(file);
     });
 
-  const fsHooks = new FsHooks(paths.root, tree);
-  const usePermissions = fsHooks.useHooks(permissionsHooks);
+  const fileTree = new FileTree(paths.root, tree);
+  const usePermissions = fileTree.use(permissionActions);
   const binPermissions = usePermissions(({ bin }) => bin);
 
   // create scripts files

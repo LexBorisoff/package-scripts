@@ -2,10 +2,8 @@
 
 import { args } from './args.js';
 import { renameCommand } from './create-app/rename-command.js';
-import {
-  currentPackageManager,
-  defaultPackageManager,
-} from './package-manager/index.js';
+import { currentPackageManager } from './package-manager/current-package-manager.js';
+import { defaultPackageManager } from './package-manager/default-package-manager.js';
 import { selectScript } from './select-script.js';
 import { updateTmp } from './update-tmp.js';
 import { logger } from './utils/logger.js';
