@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs';
+import 'dotenv/config';
 
 import { createTree, FileTree } from '@lexjs/filetree';
 import { coreActions } from '@lexjs/filetree/core';
 import $_ from '@lexjs/prompts';
-import 'dotenv/config';
 import chalk from 'chalk';
 
 import { updateConfig } from '../config/update-config.js';
