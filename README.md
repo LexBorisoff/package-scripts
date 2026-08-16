@@ -3,7 +3,7 @@
 ![Build](https://img.shields.io/github/actions/workflow/status/LexBorisoff/run-package-script/release.yml)
 ![NPM Version](https://img.shields.io/npm/v/@lexjs/run)
 
-CLI to interactively select and run package scripts using a package manager of your choice.
+CLI to interactively select and run package scripts using any package manager.
 
 - [Installation](#installation)
 - [Usage](#usage)

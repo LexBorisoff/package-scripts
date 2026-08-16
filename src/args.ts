@@ -49,7 +49,7 @@ const parsed = yargs(hideBin(process.argv))
   .scriptName(getConfigData().command)
   .usage(`Usage: $0 [ARG...] [OPTION...]`)
   .usage(
-    `Interactively select and run scripts using a package manager of your choice`,
+    `Interactively select and run package scripts using any package manager`,
   )
   .option(Option.Npm, {
     type: 'boolean',
